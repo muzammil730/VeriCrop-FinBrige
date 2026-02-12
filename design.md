@@ -1219,3 +1219,4 @@ describe('Feature: vericrop-finbridge, Property 2: Solar Azimuth Calculation Cor
 - Confidence calibration (ensure confidence scores are meaningful)
 
 
+
