@@ -43,7 +43,7 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 ## 🏗️ Architecture
 
-![VeriCrop FinBridge Architecture](vericrop_finbridge_architecture_16x9.png)
+![VeriCrop FinBridge Architecture](vericrop_finbridge_architecture.png)
 
 ### AWS Services Stack
 
@@ -80,11 +80,11 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 | Diagram | Description |
 |---------|-------------|
-| ![Architecture](vericrop_finbridge_architecture_16x9.png) | Full AWS serverless architecture |
-| ![User Flow](vericrop_user_flow_16x9.png) | 6-step farmer journey |
-| ![Process Flow](vericrop_process_flow_16x9.png) | End-to-end claim processing |
-| ![Use Cases](vericrop_use_case_16x9.png) | 5 actors (Farmer, Reviewer, Insurer, Lender, Auditor) |
-| ![Impact](vericrop_impact_scalability_16x9.png) | 3-phase rollout + metrics |
+| ![Architecture](vericrop_finbridge_architecture.png) | Full AWS serverless architecture |
+| ![User Flow](vericrop_user_flow.png) | 6-step farmer journey |
+| ![Process Flow](vericrop_process_flow.png) | End-to-end claim processing |
+| ![Use Cases](vericrop_use_case.png) | 5 actors (Farmer, Reviewer, Insurer, Lender, Auditor) |
+| ![Impact](vericrop_impact_scalability.png) | 3-phase rollout + metrics |
 
 ---
 
@@ -259,39 +259,7 @@ Where:
 
 ---
 
-## 👥 Team
-
-**VeriCrop FinBridge Team**  
-AI for Bharat Hackathon 2026  
-Prototype Phase - Awaiting AWS Credits
-
----
-
-## 📞 Contact
-
-- **Email:** [Your Email]
-- **Hackathon:** AI for Bharat (AWS + H2S + YourStory)
-- **Status:** Prototype Phase - Ready to Deploy
-- **Timeline:** 5 days (March 1-4, 2026)
-
----
-
-## 📄 License
-
-This project is developed for the AI for Bharat Hackathon 2026.
-
----
-
-## 🙏 Acknowledgments
-
-- **AWS:** For serverless infrastructure and AI services
-- **PlantVillage:** For crop disease dataset
-- **Kaggle:** For Indian crop images
-- **India Meteorological Department:** For weather data APIs
-- **Indian Farmers:** The inspiration behind this solution
-
----
-
 **Built with ❤️ for Indian Farmers**
 
 *Reducing claim-to-cash time from 6 months to 60 seconds*
+
