@@ -40,7 +40,7 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 ## 🏗️ Architecture
 
-![VeriCrop FinBridge Architecture](vericrop_finbridge_architecture.png)
+![VeriCrop FinBridge Architecture](images/vericrop_finbridge_architecture.png)
 
 ### AWS Services Stack
 
@@ -77,11 +77,11 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 | Diagram | Description |
 |---------|-------------|
-| ![Architecture](vericrop_finbridge_architecture.png) | Full AWS serverless architecture |
-| ![User Flow](vericrop_user_flow.png) | 6-step farmer journey |
-| ![Process Flow](vericrop_process_flow.png) | End-to-end claim processing |
-| ![Use Cases](vericrop_use_case.png) | 5 actors (Farmer, Reviewer, Insurer, Lender, Auditor) |
-| ![Impact](vericrop_impact_scalability.png) | 3-phase rollout + metrics |
+| ![Architecture](images/vericrop_finbridge_architecture.png) | Full AWS serverless architecture |
+| ![User Flow](images/vericrop_user_flow.png) | 6-step farmer journey |
+| ![Process Flow](images/vericrop_process_flow.png) | End-to-end claim processing |
+| ![Use Cases](images/vericrop_use_case.png) | 5 actors (Farmer, Reviewer, Insurer, Lender, Auditor) |
+| ![Impact](images/vericrop_impact_scalability.png) | 3-phase rollout + metrics |
 
 ---
 
@@ -259,5 +259,6 @@ Where:
 **Built with ❤️ for Indian Farmers**
 
 *Reducing claim-to-cash time from 6 months to 60 seconds*
+
 
 
