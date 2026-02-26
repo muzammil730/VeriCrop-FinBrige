@@ -3,9 +3,6 @@
 > **60-Second Forensic AI for Agricultural Insurance Claims**  
 > Reducing claim-to-cash time from 6 months to 60 seconds using physics-based fraud detection and blockchain bridge loans.
 
-[![AWS](https://img.shields.io/badge/AWS-Serverless-orange)](https://aws.amazon.com/)
-[![Hackathon](https://img.shields.io/badge/Hackathon-AI%20for%20Bharat-blue)](https://aiforbharat.com/)
-[![Status](https://img.shields.io/badge/Status-Prototype%20Phase-green)](https://github.com)
 
 ---
 
@@ -262,4 +259,5 @@ Where:
 **Built with ❤️ for Indian Farmers**
 
 *Reducing claim-to-cash time from 6 months to 60 seconds*
+
 
