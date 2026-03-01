@@ -127,10 +127,11 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 ## 🚀 Live Demo
 
-**Live URL:** [https://main.YOUR_AMPLIFY_ID.amplifyapp.com](https://main.YOUR_AMPLIFY_ID.amplifyapp.com)  
-*(Team leader: Update this after Amplify deployment)*
+**Live URL:** [https://master.d564kvq3much7.amplifyapp.com](https://master.d564kvq3much7.amplifyapp.com)  
+**Status:** ✅ Deployed Successfully (March 1, 2026)
 
-**GitHub Repository:** [https://github.com/YOUR_USERNAME/YOUR_REPO](https://github.com/YOUR_USERNAME/YOUR_REPO)  
+**GitHub Repository:** [https://github.com/muzammil730/VeriCrop-FinBrige](https://github.com/muzammil730/VeriCrop-FinBrige)  
+**Status:** ✅ Public Repository  
 *(Team leader: Update with your GitHub repo URL)*
 
 **Demo Video:** [YouTube Link](https://youtube.com/YOUR_VIDEO)  
