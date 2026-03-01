@@ -15,4 +15,10 @@ applications:
       cache:
         paths:
           - node_modules/**/*
+      buildSpec:
+        phases:
+          build:
+            commands:
+              - env | grep -e NEXT_PUBLIC_ >> .env.production
     appRoot: frontend
+    platform: WEB
