@@ -37,10 +37,16 @@ yarn-error.log*
 
 # CDK
 cdk.out/
-*.js
 *.d.ts
-!jest.config.js
 *.js.map
+
+# CDK JavaScript files (exclude these)
+infrastructure/**/*.js
+!infrastructure/jest.config.js
+
+# But keep frontend config files
+!frontend/next.config.js
+!frontend/**/*.config.js
 
 # IDE
 .vscode/
