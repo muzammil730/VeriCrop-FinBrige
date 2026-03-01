@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriCrop FinBridge Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #232F3E;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .mermaid {
+            text-align: center;
+            background-color: white;
+        }
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .legend h3 {
+            color: #232F3E;
+            margin-top: 0;
+        }
+        .legend-item {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: white;
+            border-left: 4px solid #FF9900;
+        }
+        .legend-item strong {
+            color: #232F3E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VeriCrop FinBridge - Production AWS Architecture</h1>
+        <div class="subtitle">60-Second Forensic Truth Engine with Blockchain-Backed Bridge Loans</div>
+        
+        <div class="mermaid">
+graph TB
+    subgraph "Edge Layer - Rural Devices"
+        Mobile[Mobile App<br/>Voice Interface]
+        Greengrass[AWS IoT Greengrass v2<br/>Local AI Inference<br/>72hr Offline Cache]
+        LocalModel[Transfer Learning Model<br/>PlantVillage + Kaggle]
+    end
+    
+    subgraph "Sync & Orchestration Layer"
+        AppSync[AWS AppSync<br/>Offline Sync<br/>GraphQL API]
+        SQS[Amazon SQS<br/>Claim Queue<br/>Dead Letter Queue]
+        EventBridge[Amazon EventBridge<br/>Event Router]
+        StepFunctions[AWS Step Functions Express<br/>60s Orchestration]
+    end
+    
+    subgraph "Forensic Validation Layer"
+        SolarValidator[Solar Azimuth Validator<br/>sin α = sin Φ sin δ + cos Φ cos δ cos h]
+        Rekognition[Amazon Rekognition<br/>Video Analysis<br/>Custom Labels]
+        WeatherAPI[IMD Weather API<br/>Real-time Data]
+        S3Lock[Amazon S3 Object Lock<br/>Immutable Evidence<br/>SHA-256 Hash]
+    end
+    
+    subgraph "AI & ML Layer"
+        SageMaker[Amazon SageMaker<br/>Transfer Learning<br/>PlantVillage Dataset]
+        Neo[SageMaker Neo<br/>Edge Optimization]
+        A2I[Amazon A2I<br/>HITL Queue<br/>5% Random Audit]
+    end
+    
+    subgraph "Truth Engine Core"
+        Lambda[AWS Lambda<br/>Business Logic<br/>Provisioned Concurrency]
+        DynamoDB[Amazon DynamoDB<br/>Claims Database<br/>On-Demand Scaling]
+    end
+    
+    subgraph "Blockchain Layer"
+        QLDB[Amazon QLDB<br/>Immutable Ledger<br/>Cryptographic Verification]
+        AMB[Amazon Managed Blockchain<br/>Hyperledger Fabric<br/>Multi-Org Network]
+        SmartContract[Loss Certificate<br/>Smart Contract]
+    end
+    
+    subgraph "Financial Integration"
+        PaymentGateway[UPI Payment Gateway<br/>Instant Transfer]
+        LoanEngine[Bridge Loan Engine<br/>0% Interest<br/>Auto-Repayment]
+    end
+    
+    subgraph "Voice Interface"
+        Lex[Amazon Lex<br/>Hindi/Tamil/Telugu<br/>Intent Recognition]
+        Polly[Amazon Polly<br/>Voice Synthesis<br/>Regional Languages]
+    end
+    
+    Mobile --> Lex
+    Mobile --> Greengrass
+    Greengrass --> LocalModel
+    Greengrass --> AppSync
+    AppSync --> SQS
+    SQS --> EventBridge
+    EventBridge --> StepFunctions
+    
+    StepFunctions --> SolarValidator
+    StepFunctions --> Rekognition
+    StepFunctions --> WeatherAPI
+    StepFunctions --> Lambda
+    
+    SolarValidator --> S3Lock
+    Rekognition --> S3Lock
+    
+    Lambda --> DynamoDB
+    Lambda --> QLDB
+    Lambda --> AMB
+    AMB --> SmartContract
+    
+    Lambda --> A2I
+    A2I --> Lambda
+    
+    Lambda --> LoanEngine
+    LoanEngine --> PaymentGateway
+    
+    SageMaker --> Neo
+    Neo --> LocalModel
+    
+    Lex --> Polly
+    Polly --> Mobile
+        </div>
+
+        <div class="legend">
+            <h3>Architecture Highlights</h3>
+            <div class="legend-item">
+                <strong>Edge/Field Zone:</strong> AWS IoT Greengrass v2 enables 72-hour offline operation with local AI inference using Transfer Learning models (PlantVillage + Kaggle datasets)
+            </div>
+            <div class="legend-item">
+                <strong>Forensic Truth Engine:</strong> Solar Azimuth formula (sin α = sin Φ sin δ + cos Φ cos δ cos h) validates shadow-sun correlation to prevent fraud
+            </div>
+            <div class="legend-item">
+                <strong>60-Second Processing:</strong> AWS Step Functions Express orchestrates parallel forensic validation (Solar, Weather, Rekognition, AI) within 60 seconds
+            </div>
+            <div class="legend-item">
+                <strong>Voice-First UX:</strong> Amazon Lex and Polly provide multilingual support (Hindi/Tamil/Telugu) for illiterate farmers
+            </div>
+            <div class="legend-item">
+                <strong>Responsible AI:</strong> Amazon A2I provides human-in-the-loop oversight with 5% random audit for governance
+            </div>
+            <div class="legend-item">
+                <strong>Immutable Ledger:</strong> Amazon QLDB and Managed Blockchain (Hyperledger Fabric) provide tamper-proof Loss Certificates
+            </div>
+            <div class="legend-item">
+                <strong>Bridge Loans:</strong> Zero-interest micro-loans (70% LTV) disbursed within 60 seconds using Loss Certificates as collateral
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

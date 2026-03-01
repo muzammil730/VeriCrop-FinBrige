@@ -1,0 +1,32 @@
+{
+  "name": "vericrop-lambda-functions",
+  "version": "1.0.0",
+  "description": "Lambda functions for VeriCrop FinBridge forensic validation",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "vericrop",
+    "solar-azimuth",
+    "fraud-detection"
+  ],
+  "author": "VeriCrop Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "jest": "^29.6.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7"
+  }
+}

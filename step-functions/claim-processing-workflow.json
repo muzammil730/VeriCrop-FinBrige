@@ -1,0 +1,136 @@
+{
+  "Comment": "VeriCrop FinBridge - 60-Second Claim Processing Workflow",
+  "StartAt": "ValidateInput",
+  "TimeoutSeconds": 60,
+  "States": {
+    "ValidateInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-input-validator",
+      "Comment": "Validate claim data completeness",
+      "TimeoutSeconds": 5,
+      "Next": "ParallelForensicValidation",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "ValidationFailed"
+        }
+      ]
+    },
+    "ParallelForensicValidation": {
+      "Type": "Parallel",
+      "Comment": "Run all forensic checks in parallel to meet 60-second deadline",
+      "Branches": [
+        {
+          "StartAt": "CalculateSolarAzimuth",
+          "States": {
+            "CalculateSolarAzimuth": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-solar-azimuth",
+              "Comment": "Calculate expected shadow angle",
+              "TimeoutSeconds": 10,
+              "Next": "CompareShadowAngle"
+            },
+            "CompareShadowAngle": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-shadow-comparator",
+              "Comment": "Compare actual vs expected shadow",
+              "TimeoutSeconds": 15,
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "CheckWeatherCorrelation",
+          "States": {
+            "CheckWeatherCorrelation": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-weather-correlation",
+              "Comment": "Verify damage matches weather patterns",
+              "TimeoutSeconds": 10,
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ClassifyCropDamage",
+          "States": {
+            "ClassifyCropDamage": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-ai-classifier",
+              "Comment": "AI classification of damage type",
+              "TimeoutSeconds": 15,
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "ConsolidateResults",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "ValidationFailed"
+        }
+      ]
+    },
+    "ConsolidateResults": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-result-consolidator",
+      "Comment": "Aggregate all validation results",
+      "TimeoutSeconds": 5,
+      "Next": "CheckFraudRisk"
+    },
+    "CheckFraudRisk": {
+      "Type": "Choice",
+      "Comment": "Determine if claim is fraudulent",
+      "Choices": [
+        {
+          "Variable": "$.is_fraud",
+          "BooleanEquals": true,
+          "Next": "FraudDetected"
+        },
+        {
+          "Variable": "$.validation_score",
+          "NumericLessThan": 0.85,
+          "Next": "LowConfidence"
+        }
+      ],
+      "Default": "IssueCertificate"
+    },
+    "FraudDetected": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-fraud-handler",
+      "Comment": "Handle fraudulent claim",
+      "End": true
+    },
+    "LowConfidence": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-hitl-router",
+      "Comment": "Route to human review (A2I)",
+      "End": true
+    },
+    "IssueCertificate": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-certificate-issuer",
+      "Comment": "Issue blockchain Loss Certificate",
+      "TimeoutSeconds": 10,
+      "Next": "CalculateBridgeLoan"
+    },
+    "CalculateBridgeLoan": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:ap-south-1:ACCOUNT_ID:function:vericrop-bridge-loan-calculator",
+      "Comment": "Calculate and disburse 0% interest bridge loan",
+      "TimeoutSeconds": 10,
+      "Next": "ClaimApproved"
+    },
+    "ClaimApproved": {
+      "Type": "Succeed",
+      "Comment": "Claim processed successfully within 60 seconds"
+    },
+    "ValidationFailed": {
+      "Type": "Fail",
+      "Comment": "Claim validation failed",
+      "Error": "ValidationError",
+      "Cause": "One or more validation steps failed"
+    }
+  }
+}

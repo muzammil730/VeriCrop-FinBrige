@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriCrop FinBridge Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .architecture {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .layer {
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7), rgba(255,255,255,0.3));
+        }
+        
+        .layer h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .component {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .component .icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .component .title {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .component .desc {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            line-height: 1.3;
+        }
+        
+        /* Layer-specific colors */
+        .edge-layer {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 5px solid #2196f3;
+        }
+        
+        .sync-layer {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-left: 5px solid #9c27b0;
+        }
+        
+        .truth-layer {
+            background: linear-gradient(135deg, #fff3e0, #ffcc02);
+            border-left: 5px solid #ff9800;
+        }
+        
+        .core-layer {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-left: 5px solid #4caf50;
+        }
+        
+        .blockchain-layer {
+            background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+            border-left: 5px solid #e91e63;
+        }
+        
+        .financial-layer {
+            background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+            border-left: 5px solid #8bc34a;
+        }
+        
+        .ui-layer {
+            background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+            border-left: 5px solid #03a9f4;
+        }
+        
+        .security-layer {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-left: 5px solid #f44336;
+        }
+        
+        .data-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 1.5em;
+            color: #e74c3c;
+        }
+        
+        .arrow {
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+        }
+        
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .metric .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .metric .label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .flow-diagram {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .flow-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .flow-step:not(:last-child)::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 VeriCrop FinBridge</h1>
+            <p>Sensor Fusion Architecture - Disaster-Resilient Agricultural Fintech Platform</p>
+        </div>
+        
+        <div class="architecture">
+            <!-- Edge Layer -->
+            <div class="layer edge-layer">
+                <h3>🏞️ Rural Edge Layer - Disaster-Resilient Computing</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">📱</span>
+                        <div class="title">Farmer Mobile Device</div>
+                        <div class="desc">Android/iOS App with GPS & Camera</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🔧</span>
+                        <div class="title">AWS IoT Greengrass v2</div>
+                        <div class="desc">Edge Computing Gateway</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🧠</span>
+                        <div class="title">Local AI Models</div>
+                        <div class="desc">Crop Damage Detection</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">💾</span>
+                        <div class="title">SQLite Cache</div>
+                        <div class="desc">Offline Claims Storage</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📡</span>
+                        <div class="title">4G/LTE Connectivity</div>
+                        <div class="desc">Auto-Sync When Available</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <span class="arrow">⬆️</span>
+                <span>Data Flow</span>
+                <span class="arrow">⬆️</span>
+            </div>
+            
+            <!-- Sync Layer -->
+            <div class="layer sync-layer">
+                <h3>🔄 Connectivity & Sync Layer</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">🔄</span>
+                        <div class="title">AWS AppSync</div>
+                        <div class="desc">GraphQL + Offline Sync</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📬</span>
+                        <div class="title">Amazon SQS</div>
+                        <div class="desc">Claim Processing Queue</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">⚡</span>
+                        <div class="title">EventBridge</div>
+                        <div class="desc">Event Orchestration</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📊</span>
+                        <div class="title">CloudWatch</div>
+                        <div class="desc">Monitoring & Alerts</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <span class="arrow">⬆️</span>
+                <span>Forensic Validation</span>
+                <span class="arrow">⬆️</span>
+            </div>
+            
+            <!-- Truth Engine -->
+            <div class="layer truth-layer">
+                <h3>🔍 Truth Engine - Forensic Validation Layer</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">👁️</span>
+                        <div class="title">Amazon Rekognition</div>
+                        <div class="desc">Video/Image Analysis</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🔒</span>
+                        <div class="title">S3 Object Lock</div>
+                        <div class="desc">Immutable Evidence Vault</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🌦️</span>
+                        <div class="title">Weather Service</div>
+                        <div class="desc">IMD Real-time Data</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🗺️</span>
+                        <div class="title">Geospatial Validator</div>
+                        <div class="desc">GPS & Shadow Analysis</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🚨</span>
+                        <div class="title">Fraud Detection</div>
+                        <div class="desc">ML Risk Scoring</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <span class="arrow">⬆️</span>
+                <span>Processing</span>
+                <span class="arrow">⬆️</span>
+            </div>
+            
+            <!-- Core Engine -->
+            <div class="layer core-layer">
+                <h3>⚙️ Core Processing Engine</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">🔄</span>
+                        <div class="title">AWS Step Functions</div>
+                        <div class="desc">Truth Engine Orchestrator</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">⚡</span>
+                        <div class="title">AWS Lambda</div>
+                        <div class="desc">Business Logic Functions</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🗃️</span>
+                        <div class="title">DynamoDB</div>
+                        <div class="desc">Claims Database</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">⚡</span>
+                        <div class="title">ElastiCache</div>
+                        <div class="desc">Session Cache</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 20px;">
+                <!-- Blockchain -->
+                <div class="layer blockchain-layer" style="flex: 1;">
+                    <h3>⛓️ Blockchain Infrastructure</h3>
+                    <div class="components">
+                        <div class="component">
+                            <span class="icon">⛓️</span>
+                            <div class="title">Amazon Managed Blockchain</div>
+                            <div class="desc">Hyperledger Fabric</div>
+                        </div>
+                        <div class="component">
+                            <span class="icon">📜</span>
+                            <div class="title">Smart Contracts</div>
+                            <div class="desc">Loss Certificate Logic</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial -->
+                <div class="layer financial-layer" style="flex: 1;">
+                    <h3>💰 Financial Services Layer</h3>
+                    <div class="components">
+                        <div class="component">
+                            <span class="icon">💰</span>
+                            <div class="title">Bridge Loan Engine</div>
+                            <div class="desc">Risk Assessment</div>
+                        </div>
+                        <div class="component">
+                            <span class="icon">💳</span>
+                            <div class="title">Payment Gateway</div>
+                            <div class="desc">UPI Integration</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UI Layer -->
+            <div class="layer ui-layer">
+                <h3>🖥️ User Interface Layer</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">🎤</span>
+                        <div class="title">Amazon Lex</div>
+                        <div class="desc">Multi-language Voice Interface</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">💻</span>
+                        <div class="title">Web Dashboard</div>
+                        <div class="desc">Admin & Vendor Portal</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📱</span>
+                        <div class="title">Mobile Interface</div>
+                        <div class="desc">Farmer App UI</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📢</span>
+                        <div class="title">SNS Notifications</div>
+                        <div class="desc">SMS/Push Alerts</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Layer -->
+            <div class="layer security-layer">
+                <h3>🔐 Security & Compliance</h3>
+                <div class="components">
+                    <div class="component">
+                        <span class="icon">🔐</span>
+                        <div class="title">AWS IAM</div>
+                        <div class="desc">Identity & Access Management</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🔑</span>
+                        <div class="title">AWS KMS</div>
+                        <div class="desc">Encryption Key Management</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">📝</span>
+                        <div class="title">CloudTrail</div>
+                        <div class="desc">Audit Logging</div>
+                    </div>
+                    <div class="component">
+                        <span class="icon">🛡️</span>
+                        <div class="title">AWS WAF</div>
+                        <div class="desc">Web Application Firewall</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data Flow Process -->
+        <div class="flow-diagram">
+            <h3>📊 End-to-End Data Flow Process</h3>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="icon">📱</div>
+                    <div class="title">Farmer Submits</div>
+                    <div class="desc">Damage Evidence</div>
+                </div>
+                <div class="flow-step">
+                    <div class="icon">🧠</div>
+                    <div class="title">Edge AI</div>
+                    <div class="desc">Local Validation</div>
+                </div>
+                <div class="flow-step">
+                    <div class="icon">🔍</div>
+                    <div class="title">Truth Engine</div>
+                    <div class="desc">Forensic Analysis</div>
+                </div>
+                <div class="flow-step">
+                    <div class="icon">⛓️</div>
+                    <div class="title">Blockchain</div>
+                    <div class="desc">Certificate Issued</div>
+                </div>
+                <div class="flow-step">
+                    <div class="icon">💰</div>
+                    <div class="title">Bridge Loan</div>
+                    <div class="desc">Instant Disbursement</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="value">< 60s</div>
+                <div class="label">End-to-end Processing</div>
+            </div>
+            <div class="metric">
+                <div class="value">99.9%</div>
+                <div class="label">Fraud Detection Accuracy</div>
+            </div>
+            <div class="metric">
+                <div class="value">72 hours</div>
+                <div class="label">Offline Operation</div>
+            </div>
+            <div class="metric">
+                <div class="value">0%</div>
+                <div class="label">Interest Rate</div>
+            </div>
+            <div class="metric">
+                <div class="value">99.95%</div>
+                <div class="label">System Uptime</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
