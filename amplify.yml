@@ -1,6 +1,8 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: frontend
+    platform: WEB
+    frontend:
       phases:
         preBuild:
           commands:
@@ -15,10 +17,3 @@ applications:
       cache:
         paths:
           - node_modules/**/*
-      buildSpec:
-        phases:
-          build:
-            commands:
-              - env | grep -e NEXT_PUBLIC_ >> .env.production
-    appRoot: frontend
-    platform: WEB
