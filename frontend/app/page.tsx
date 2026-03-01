@@ -1,3 +1,4 @@
+// VeriCrop FinBridge - Trigger rebuild with fixed amplify.yml
 'use client'
 
 import { useState } from 'react'
