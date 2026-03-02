@@ -66,7 +66,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify correlation scores are calculated correctly
 
 - [ ] 4. Implement AI crop damage classification
-  - [ ] 4.1 Set up SageMaker training job with Transfer Learning
+  - [x] 4.1 Set up SageMaker training job with Transfer Learning
     - Configure SageMaker training job for MobileNetV2 base model
     - Use PlantVillage dataset as base training data
     - Fine-tune with Kaggle Indian Crop images

@@ -1,0 +1,13 @@
+{
+  "claimId": "test-claim-001",
+  "damageType": "drought",
+  "weatherData": {
+    "temperature": 42,
+    "rainfall": 5,
+    "humidity": 30,
+    "windSpeed": 15,
+    "cloudCover": 10,
+    "weatherCondition": "clear",
+    "extremeEvents": ["drought", "heatwave"]
+  }
+}
