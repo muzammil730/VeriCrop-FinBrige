@@ -364,13 +364,49 @@ In production, monitor:
 - **Error rate**: Track failed predictions
 - **A2I feedback**: Use human reviews to improve model
 
+## SageMaker Neo Compilation (Task 4.2)
+
+After training the model, compile it with SageMaker Neo for optimized edge deployment:
+
+### Quick Start (Hackathon Demo)
+
+```bash
+# Create mock compiled model (instant, $0 cost)
+python compile_neo.py --account-id <account-id> --mock
+
+# Test inference latency
+python test_inference_latency.py --mock
+```
+
+### Production Compilation
+
+```bash
+# Compile model with SageMaker Neo (5-10 minutes, $0.50 cost)
+python compile_neo.py \
+  --account-id <account-id> \
+  --model-uri s3://vericrop-training-data-<account-id>/models/model.tar.gz \
+  --wait
+
+# Test inference latency
+python test_inference_latency.py \
+  --compiled-model-path ./compiled-model/ \
+  --test-images ./test-images/
+```
+
+**Expected Results**:
+- 2-3x faster inference
+- 50% smaller model size
+- <2 second inference latency ✓
+
+**See**: `NEO_COMPILATION_QUICKSTART.md` for detailed instructions
+
 ## Next Steps
 
-After completing Task 4.1, proceed to:
+After completing Tasks 4.1 and 4.2, proceed to:
 
-- **Task 4.2**: Compile model with SageMaker Neo for edge deployment
 - **Task 4.3**: Create crop damage classification Lambda function
 - **Task 4.4**: Write unit tests for AI classification
+- **Task 15**: Deploy to AWS IoT Greengrass v2 for offline operation
 
 ## References
 

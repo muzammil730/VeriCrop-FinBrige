@@ -1,0 +1,11 @@
+# Requirements for SageMaker Neo Compilation (Task 4.2)
+# Install with: pip install -r requirements-neo.txt
+
+boto3>=1.26.0
+sagemaker>=2.150.0
+numpy>=1.23.5
+Pillow>=9.5.0
+
+# Optional: For testing compiled models locally
+# dlr>=1.13.0  # Deep Learning Runtime for Neo compiled models
+# tensorflow>=2.12.0  # For testing original models
