@@ -46,13 +46,13 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify claims within tolerance pass validation
 
 - [ ] 3. Implement weather correlation validation
-  - [ ] 3.1 Create weather data integration Lambda function
+  - [x] 3.1 Create weather data integration Lambda function
     - Integrate with India Meteorological Department (IMD) API
     - Fetch weather data for GPS location and 48-hour time window
     - Store historical weather data in DynamoDB
     - _Requirements: 9.1, 9.3_
   
-  - [ ] 3.2 Create weather correlation analysis Lambda function
+  - [x] 3.2 Create weather correlation analysis Lambda function
     - Compare reported damage type with weather patterns
     - Detect anomalies (e.g., drought during heavy rainfall)
     - Calculate correlation score
