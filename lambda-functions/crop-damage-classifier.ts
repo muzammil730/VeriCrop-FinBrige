@@ -325,7 +325,11 @@ async function invokeSageMakerEndpoint(preprocessedImage: number[][][]): Promise
     return predictions;
   } catch (error) {
     // Check if endpoint doesn't exist (common in hackathon demo)
-    if (error instanceof Error && error.message.includes('Could not find endpoint')) {
+    if (error instanceof Error && (
+      error.message.includes('Could not find endpoint') ||
+      error.message.includes('not found') ||
+      error.message.includes('does not exist')
+    )) {
       console.warn('SageMaker endpoint not found, using mock predictions for demo');
       return generateMockPredictions();
     }

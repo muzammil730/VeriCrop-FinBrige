@@ -90,7 +90,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify confidence scores are returned
     - Test error handling for invalid images
 
-- [ ] 5. Checkpoint - Ensure forensic validation works end-to-end
+- [x] 5. Checkpoint - Ensure forensic validation works end-to-end
   - Ensure all tests pass, ask the user if questions arise.
 
 
