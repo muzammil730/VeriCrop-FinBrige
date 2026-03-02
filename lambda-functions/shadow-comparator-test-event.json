@@ -1,0 +1,10 @@
+{
+  "claimId": "CLAIM-2026-03-001",
+  "videoKey": "claims/CLAIM-2026-03-001/evidence-video.mp4",
+  "expectedShadowAngle": 135.5,
+  "timestamp": "2026-03-01T12:00:00Z",
+  "gpsCoordinates": {
+    "latitude": 28.6139,
+    "longitude": 77.2090
+  }
+}
