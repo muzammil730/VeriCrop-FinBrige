@@ -185,7 +185,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Set up IAM permissions for ledger access
     - _Requirements: 7.1_
   
-  - [x] 10.2 Create Loss Certificate issuance Lambda function
+  - [ ] 10.2 Create Loss Certificate issuance Lambda function
     - Generate unique certificate ID
     - Create certificate record with farmer DID, damage amount, validation score
     - Store in QLDB with cryptographic hash
