@@ -1,0 +1,356 @@
+{
+  "Comment": "VeriCrop FinBridge Truth Engine - 60-Second Forensic Claim Processing",
+  "StartAt": "ValidateSubmission",
+  "TimeoutSeconds": 60,
+  "States": {
+    "ValidateSubmission": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-submission-validator",
+        "Payload.$": "$"
+      },
+      "Comment": "Validate claim data completeness and format",
+      "TimeoutSeconds": 5,
+      "ResultPath": "$.validationResult",
+      "ResultSelector": {
+        "isValid.$": "$.Payload.isValid",
+        "errors.$": "$.Payload.errors",
+        "claimData.$": "$.Payload.claimData"
+      },
+      "Next": "CheckSubmissionValid",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "RejectClaim"
+        }
+      ]
+    },
+    "CheckSubmissionValid": {
+      "Type": "Choice",
+      "Comment": "Check if submission validation passed",
+      "Choices": [
+        {
+          "Variable": "$.validationResult.isValid",
+          "BooleanEquals": true,
+          "Next": "ParallelForensicValidation"
+        }
+      ],
+      "Default": "RejectClaim"
+    },
+    "ParallelForensicValidation": {
+      "Type": "Parallel",
+      "Comment": "Run all forensic validation steps in parallel to meet 60-second deadline",
+      "TimeoutSeconds": 45,
+      "Branches": [
+        {
+          "StartAt": "SolarAzimuthBranch",
+          "States": {
+            "SolarAzimuthBranch": {
+              "Type": "Pass",
+              "Comment": "Prepare input for solar azimuth calculator",
+              "Parameters": {
+                "claimId.$": "$.claimId",
+                "latitude.$": "$.gpsCoordinates.latitude",
+                "longitude.$": "$.gpsCoordinates.longitude",
+                "timestamp.$": "$.timestamp"
+              },
+              "Next": "CalculateSolarAzimuth"
+            },
+            "CalculateSolarAzimuth": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-solar-azimuth-validator",
+                "Payload.$": "$"
+              },
+              "Comment": "Calculate expected shadow angle using solar geometry",
+              "TimeoutSeconds": 10,
+              "ResultSelector": {
+                "solarAzimuth.$": "$.Payload.solarAzimuth",
+                "expectedShadowDirection.$": "$.Payload.expectedShadowDirection",
+                "solarDeclination.$": "$.Payload.solarDeclination"
+              },
+              "ResultPath": "$.solarResult",
+              "Next": "CompareShadowAngle"
+            },
+            "CompareShadowAngle": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-shadow-comparator",
+                "Payload": {
+                  "claimId.$": "$.claimId",
+                  "expectedShadowAngle.$": "$.solarResult.expectedShadowDirection",
+                  "videoKey.$": "$.videoKey",
+                  "timestamp.$": "$.timestamp",
+                  "gpsCoordinates.$": "$.gpsCoordinates"
+                }
+              },
+              "Comment": "Compare actual vs expected shadow angles (±5° tolerance)",
+              "TimeoutSeconds": 15,
+              "ResultSelector": {
+                "validationStatus.$": "$.Payload.validationStatus",
+                "fraudRiskLevel.$": "$.Payload.fraudRiskLevel",
+                "angleVariance.$": "$.Payload.angleVariance",
+                "confidence.$": "$.Payload.confidence"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "WeatherBranch",
+          "States": {
+            "WeatherBranch": {
+              "Type": "Pass",
+              "Comment": "Prepare input for weather integrator",
+              "Parameters": {
+                "claimId.$": "$.claimId",
+                "gpsCoordinates.$": "$.gpsCoordinates",
+                "timestamp.$": "$.timestamp"
+              },
+              "Next": "FetchWeatherData"
+            },
+            "FetchWeatherData": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-weather-data-integrator",
+                "Payload.$": "$"
+              },
+              "Comment": "Fetch weather data from IMD API for 48-hour window",
+              "TimeoutSeconds": 8,
+              "ResultSelector": {
+                "temperature.$": "$.Payload.temperature",
+                "rainfall.$": "$.Payload.rainfall",
+                "humidity.$": "$.Payload.humidity",
+                "windSpeed.$": "$.Payload.windSpeed",
+                "weatherCondition.$": "$.Payload.weatherCondition",
+                "extremeEvents.$": "$.Payload.extremeEvents"
+              },
+              "ResultPath": "$.weatherData",
+              "Next": "AnalyzeWeatherCorrelation"
+            },
+            "AnalyzeWeatherCorrelation": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-weather-correlation-analyzer",
+                "Payload": {
+                  "claimId.$": "$.claimId",
+                  "damageType.$": "$.damageType",
+                  "weatherData.$": "$.weatherData"
+                }
+              },
+              "Comment": "Analyze weather patterns against claimed damage type",
+              "TimeoutSeconds": 5,
+              "ResultSelector": {
+                "correlationScore.$": "$.Payload.correlationScore",
+                "isConsistent.$": "$.Payload.isConsistent",
+                "recommendation.$": "$.Payload.recommendation",
+                "anomalies.$": "$.Payload.anomalies"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "AIClassificationBranch",
+          "States": {
+            "AIClassificationBranch": {
+              "Type": "Pass",
+              "Comment": "Prepare input for AI classifier",
+              "Parameters": {
+                "claimId.$": "$.claimId",
+                "imageData.$": "$.imageData",
+                "imageS3Uri.$": "$.imageS3Uri",
+                "metadata": {
+                  "gpsCoordinates.$": "$.gpsCoordinates",
+                  "timestamp.$": "$.timestamp"
+                }
+              },
+              "Next": "ClassifyCropDamage"
+            },
+            "ClassifyCropDamage": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-crop-damage-classifier",
+                "Payload.$": "$"
+              },
+              "Comment": "AI classification of crop damage type and severity",
+              "TimeoutSeconds": 15,
+              "ResultSelector": {
+                "damageType.$": "$.Payload.damageType",
+                "confidence.$": "$.Payload.confidence",
+                "severity.$": "$.Payload.severity",
+                "processingTime.$": "$.Payload.processingTime"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.forensicResults",
+      "Next": "ConsolidateResults",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "RejectClaim"
+        }
+      ]
+    },
+    "ConsolidateResults": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-result-consolidator",
+        "Payload": {
+          "claimId.$": "$.claimId",
+          "shadowValidation.$": "$.forensicResults[0]",
+          "weatherCorrelation.$": "$.forensicResults[1]",
+          "aiClassification.$": "$.forensicResults[2]",
+          "originalClaim.$": "$"
+        }
+      },
+      "Comment": "Aggregate all validation results and calculate overall score",
+      "TimeoutSeconds": 3,
+      "ResultSelector": {
+        "overallScore.$": "$.Payload.overallScore",
+        "validationResult.$": "$.Payload.validationResult",
+        "fraudRisk.$": "$.Payload.fraudRisk",
+        "confidence.$": "$.Payload.confidence",
+        "recommendation.$": "$.Payload.recommendation"
+      },
+      "ResultPath": "$.consolidatedResult",
+      "Next": "EvaluateClaimDecision"
+    },
+    "EvaluateClaimDecision": {
+      "Type": "Choice",
+      "Comment": "Determine claim outcome based on validation results",
+      "Choices": [
+        {
+          "Variable": "$.consolidatedResult.fraudRisk",
+          "StringEquals": "HIGH",
+          "Next": "RouteToHITL"
+        },
+        {
+          "Variable": "$.consolidatedResult.confidence",
+          "NumericLessThan": 0.85,
+          "Next": "RouteToHITL"
+        },
+        {
+          "Variable": "$.consolidatedResult.validationResult",
+          "StringEquals": "APPROVED",
+          "Next": "IssueLossCertificate"
+        },
+        {
+          "Variable": "$.consolidatedResult.validationResult",
+          "StringEquals": "REJECTED",
+          "Next": "RejectClaim"
+        }
+      ],
+      "Default": "RouteToHITL"
+    },
+    "RouteToHITL": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-hitl-router",
+        "Payload": {
+          "claimId.$": "$.claimId",
+          "reason.$": "$.consolidatedResult.recommendation",
+          "validationResults.$": "$.consolidatedResult",
+          "forensicResults.$": "$.forensicResults"
+        }
+      },
+      "Comment": "Route to Amazon A2I for human review (low confidence or high fraud risk)",
+      "TimeoutSeconds": 2,
+      "ResultSelector": {
+        "taskArn.$": "$.Payload.taskArn",
+        "status.$": "$.Payload.status",
+        "message.$": "$.Payload.message"
+      },
+      "End": true
+    },
+    "IssueLossCertificate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-certificate-issuer",
+        "Payload": {
+          "claimId.$": "$.claimId",
+          "farmerDID.$": "$.farmerDID",
+          "damageAmount.$": "$.damageAmount",
+          "validationScore.$": "$.consolidatedResult.overallScore",
+          "gpsLocation.$": "$.gpsCoordinates",
+          "damageType.$": "$.forensicResults[2].damageType",
+          "severity.$": "$.forensicResults[2].severity"
+        }
+      },
+      "Comment": "Issue blockchain-based Loss Certificate on QLDB",
+      "TimeoutSeconds": 5,
+      "ResultSelector": {
+        "certificateId.$": "$.Payload.certificateId",
+        "blockAddress.$": "$.Payload.blockAddress",
+        "issuedAt.$": "$.Payload.issuedAt",
+        "collateralValue.$": "$.Payload.collateralValue"
+      },
+      "ResultPath": "$.certificate",
+      "Next": "CalculateBridgeLoan"
+    },
+    "CalculateBridgeLoan": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-bridge-loan-calculator",
+        "Payload": {
+          "claimId.$": "$.claimId",
+          "certificateId.$": "$.certificate.certificateId",
+          "damageAmount.$": "$.damageAmount",
+          "farmerUPI.$": "$.farmerUPI",
+          "farmerDID.$": "$.farmerDID"
+        }
+      },
+      "Comment": "Calculate and disburse 0% interest bridge loan (70% of damage)",
+      "TimeoutSeconds": 10,
+      "ResultSelector": {
+        "loanId.$": "$.Payload.loanId",
+        "loanAmount.$": "$.Payload.loanAmount",
+        "interestRate.$": "$.Payload.interestRate",
+        "disbursedAt.$": "$.Payload.disbursedAt",
+        "transactionId.$": "$.Payload.transactionId"
+      },
+      "ResultPath": "$.loan",
+      "Next": "ClaimApproved"
+    },
+    "ClaimApproved": {
+      "Type": "Succeed",
+      "Comment": "Claim processed successfully within 60 seconds - Certificate issued and loan disbursed"
+    },
+    "RejectClaim": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:889168907575:function:vericrop-claim-rejector",
+        "Payload": {
+          "claimId.$": "$.claimId",
+          "reason.$": "$.consolidatedResult.recommendation",
+          "validationResults.$": "$.consolidatedResult",
+          "error.$": "$.error"
+        }
+      },
+      "Comment": "Reject claim and provide specific feedback",
+      "TimeoutSeconds": 2,
+      "ResultSelector": {
+        "status": "REJECTED",
+        "reason.$": "$.Payload.reason",
+        "feedback.$": "$.Payload.feedback"
+      },
+      "End": true
+    }
+  }
+}

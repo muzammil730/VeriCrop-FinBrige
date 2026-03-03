@@ -114,8 +114,8 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify hash calculation and storage
     - Verify hash verification on retrieval
 
-- [ ] 7. Implement AWS Step Functions Express orchestration
-  - [ ] 7.1 Create Step Functions Express state machine definition
+- [-] 7. Implement AWS Step Functions Express orchestration
+  - [x] 7.1 Create Step Functions Express state machine definition
     - Define 60-second timeout workflow with explicit state timeouts
     - Configure parallel execution for forensic validation steps
     - Implement choice logic for confidence thresholds and fraud detection
