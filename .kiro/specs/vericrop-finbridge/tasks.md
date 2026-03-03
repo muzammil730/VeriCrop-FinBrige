@@ -256,14 +256,14 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify interest rate is 0%
     - Verify certificate is set as collateral
   
-  - [ ] 12.3 Create payment gateway integration Lambda function
+  - [x] 12.3 Create payment gateway integration Lambda function
     - Integrate with UPI payment gateway
     - Implement fund transfer to farmer's UPI account
     - Handle payment failures with retry logic
     - Send SMS and voice call notifications
     - _Requirements: 10.2, 10.6_
   
-  - [ ] 12.4 Create insurance payout processing Lambda function
+  - [x] 12.4 Create insurance payout processing Lambda function
     - Receive insurance payout notifications
     - Automatically repay bridge loan from payout
     - Handle insufficient payout (convert to standard loan)
