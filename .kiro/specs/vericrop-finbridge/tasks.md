@@ -114,7 +114,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify hash calculation and storage
     - Verify hash verification on retrieval
 
-- [-] 7. Implement AWS Step Functions Express orchestration
+- [ ] 7. Implement AWS Step Functions Express orchestration
   - [x] 7.1 Create Step Functions Express state machine definition
     - Define 60-second timeout workflow with explicit state timeouts
     - Configure parallel execution for forensic validation steps
@@ -122,13 +122,13 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Add error handling with catch blocks and retries
     - _Requirements: 1.1, 6.1, 6.4_
   
-  - [ ] 7.2 Create submission validation Lambda function
+  - [x] 7.2 Create submission validation Lambda function
     - Validate claim data completeness
     - Validate evidence file formats and sizes
     - Return validation result within 5 seconds
     - _Requirements: 1.1_
   
-  - [ ] 7.3 Create result consolidation Lambda function
+  - [x] 7.3 Create result consolidation Lambda function
     - Aggregate results from parallel validation steps
     - Calculate overall validation score
     - Determine fraud risk level
