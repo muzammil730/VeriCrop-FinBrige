@@ -241,7 +241,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify certificate status is updated correctly
 
 - [ ] 12. Implement bridge loan automation
-  - [ ] 12.1 Create loan calculation Lambda function
+  - [x] 12.1 Create loan calculation Lambda function
     - Calculate eligible loan amount (70% of damage amount)
     - Validate Loss Certificate exists and is active
     - Set certificate as collateral
