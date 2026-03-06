@@ -95,7 +95,7 @@ The implementation follows an incremental approach: core infrastructure → fore
 
 
 - [ ] 6. Implement Amazon Rekognition video analysis
-  - [ ] 6.1 Create Rekognition integration Lambda function
+  - [-] 6.1 Create Rekognition integration Lambda function
     - Configure Rekognition Custom Labels for crop damage patterns
     - Implement video analysis for object detection
     - Extract metadata (GPS, timestamp, device info) from video files

@@ -65,8 +65,8 @@ export class CircuitBreaker {
     } catch (error) {
       this.onFailure();
       
-      if (fallback && this.state === CircuitState.OPEN) {
-        console.log(`Using fallback for ${this.config.name} after failure`);
+      if (fallback) {
+        console.log(`Using fallback for ${this.config.name} after failure (state: ${this.state})`);
         return fallback();
       }
       
