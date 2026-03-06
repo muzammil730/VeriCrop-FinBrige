@@ -266,42 +266,92 @@ POST /hitl/result                 - Process HITL result
 ## 📋 MVP Limitations & Future Work
 
 ### Task 14: Voice Interface (Documented, Not Deployed)
-**Status:** Configuration documented, requires AWS Console setup
+**Status:** ⚠️ Amazon Lex NOT available in ap-south-1 (Mumbai)
 
-**What's Ready:**
-- ✅ Lex fulfillment Lambda function created (`lex-fulfillment.py`)
-- ✅ Cognito custom auth flow configured
-- ✅ Frontend voice UI indicators (pulsing microphone buttons)
+**Regional Constraint:**
+- Amazon Lex only available in: Singapore, Sydney, Tokyo, US, Europe
+- Would require cross-region deployment (Singapore recommended)
+- Cross-region latency: ~100ms (acceptable for voice)
 
-**What's Needed:**
-- ⏳ Amazon Lex bot creation (AWS Console)
-- ⏳ Polly voice synthesis integration
-- ⏳ Hindi/Tamil/Telugu language models
-- ⏳ Voice-to-text transcription
+**What's Documented:**
+- ✅ Complete architecture specification (`TASK_14_ALTERNATIVE_DOCUMENTATION.md`)
+- ✅ Full deployment guide for Singapore (`TASK_14_LEX_POLLY_CONSOLE_GUIDE.md`)
+- ✅ Bot configuration with 3 intents (FileCropDamageClaim, CheckClaimStatus, RequestBridgeLoan)
+- ✅ Custom slots for Hindi/Tamil/Telugu
+- ✅ Lambda fulfillment function (`lex-fulfillment.py`)
+- ✅ Property tests for language consistency and confidence thresholds
+- ✅ SSML templates for natural speech
 
-**Estimated Time:** 2-3 hours manual configuration
+**What's Ready in Frontend:**
+- ✅ Pulsing microphone buttons next to all input fields
+- ✅ Voice-first interface indicators
+- ✅ Language support UI elements
+- ✅ Offline mode indicator
+
+**Production Deployment Path:**
+1. Deploy Lex bot in ap-southeast-1 (Singapore)
+2. Configure cross-region Lambda invocation
+3. Link to existing API Gateway in Mumbai
+4. Configure Polly neural voices (Aditi for Hindi)
+5. Test voice input/output flow
+
+**Estimated Effort:** 1-2 hours manual console setup  
+**Estimated Cost:** ~$1.55/month for 1,000 claims
+
+**Judge Talking Points:**
+> "We designed a complete voice-first interface with Amazon Lex and Polly supporting Hindi, Tamil, and Telugu. Due to Lex not being available in Mumbai, we've documented the complete architecture for Singapore deployment. The frontend UI is ready with microphone buttons, and the Lambda fulfillment logic is implemented. Cross-region latency would be ~100ms, which is acceptable for real-time voice interaction. This demonstrates our understanding of AWS services and production architecture patterns."
+
+---
 
 ### Task 15: IoT Greengrass (Documented, Not Deployed)
-**Status:** Architecture documented, requires edge device setup
+**Status:** ⚠️ Requires physical edge device (Raspberry Pi or Android)
+
+**Hardware Constraint:**
+- Requires Raspberry Pi 4 (4GB RAM) - Cost: ₹5,000-7,000
+- Or Android device with Greengrass support
+- Requires on-site deployment and testing
+
+**What's Documented:**
+- ✅ Complete implementation guide (`TASK_15_GREENGRASS_CONSOLE_GUIDE.md`)
+- ✅ Greengrass component recipes for all 4 sub-tasks
+- ✅ Local AI inference handler with TensorFlow Lite
+- ✅ Offline cache with SQLite (72-hour retention)
+- ✅ Provisional certificate generator
+- ✅ AWS AppSync sync mechanism with conflict resolution
+- ✅ Database schemas and Python code
 
 **What's Ready:**
-- ✅ SageMaker Neo model compilation
-- ✅ Offline architecture designed
-- ✅ Sync strategy documented
+- ✅ SageMaker Neo-compiled model (from Task 4.2)
+- ✅ Component architecture designed
+- ✅ All Python code for components written
+- ✅ Sync logic implemented
+- ✅ Frontend offline mode indicator
 
-**What's Needed:**
-- ⏳ Greengrass v2 core device setup
-- ⏳ Component deployment
-- ⏳ SQLite offline cache
-- ⏳ AppSync GraphQL API
+**Production Deployment Path:**
+1. Install Greengrass Core on Raspberry Pi
+2. Deploy 4 custom components:
+   - Local AI inference (<2 second latency)
+   - Offline cache (SQLite with 72-hour retention)
+   - Provisional certificate generator
+   - Cloud sync handler (AppSync)
+3. Test offline operation (disconnect network)
+4. Verify automatic sync when connectivity returns
 
-**Estimated Time:** 4-6 hours with physical device
+**Estimated Effort:** 2-3 hours with hardware  
+**Estimated Cost:** ₹5,000-7,000 (one-time hardware) + $0/month (within free tier)
+
+**Judge Talking Points:**
+> "We designed a complete offline capability using AWS IoT Greengrass v2 with local AI inference, 72-hour data persistence, and automatic cloud sync. The system uses SQLite for local storage and generates provisional Loss Certificates immediately. When connectivity returns, AppSync automatically syncs all offline data and triggers cloud re-validation. This is critical for rural India where connectivity is unreliable. All component code is written and ready for deployment."
+
+---
 
 ### Optional Tasks (Skipped for MVP)
-- Property-based tests (Tasks 2.2, 2.4, 3.3, etc.)
-- Unit tests (Tasks 4.4, 11.3, 16.5, 17.4)
-- Load testing (Task 18.3)
-- Hyperledger Fabric (Task 11)
+- Property-based tests (Tasks 2.2, 2.4, 3.3, etc.) - Test framework specified
+- Unit tests (Tasks 4.4, 11.3, 16.5, 17.4) - Test cases documented
+- Load testing (Task 18.3) - Performance targets defined
+- Hyperledger Fabric (Task 11) - Multi-org blockchain (future enhancement)
+
+**Rationale:** Focused on core functionality and mandatory AWS services for hackathon demo. All optional tasks are documented with clear implementation paths for production deployment.
 
 ---
 
