@@ -175,17 +175,17 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify HITL tasks contain all required data
     - Verify human decisions are recorded with rationale
 
-- [ ] 9. Checkpoint - Ensure orchestration and HITL work correctly
+- [x] 9. Checkpoint - Ensure orchestration and HITL work correctly
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 10. Implement blockchain ledger for Loss Certificates
-  - [ ] 10.1 Set up Amazon QLDB ledger
+  - [x] 10.1 Set up Amazon QLDB ledger
     - Create QLDB ledger for Loss Certificates
     - Configure cryptographic verification
     - Set up IAM permissions for ledger access
     - _Requirements: 7.1_
   
-  - [ ] 10.2 Create Loss Certificate issuance Lambda function
+  - [x] 10.2 Create Loss Certificate issuance Lambda function
     - Generate unique certificate ID
     - Create certificate record with farmer DID, damage amount, validation score
     - Store in QLDB with cryptographic hash
