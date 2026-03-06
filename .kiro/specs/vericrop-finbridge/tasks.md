@@ -143,13 +143,13 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify rejections include specific feedback
 
 - [ ] 8. Implement Amazon A2I human-in-the-loop workflow
-  - [-] 8.1 Create A2I workflow configuration
+  - [x] 8.1 Create A2I workflow configuration
     - Configure A2I task template for claim review
     - Set up workteam for human reviewers
     - Define UI template for evidence presentation
     - _Requirements: 8.3_
   
-  - [ ] 8.2 Create HITL routing Lambda function
+  - [x] 8.2 Create HITL routing Lambda function
     - Implement confidence threshold check (<85%)
     - Implement fraud risk check (HIGH)
     - Implement 5% random audit selection
@@ -163,7 +163,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify low-confidence claims are routed to HITL
     - Verify approximately 5% of claims are randomly audited
   
-  - [-] 8.4 Create human review result processing Lambda function
+  - [x] 8.4 Create human review result processing Lambda function
     - Retrieve A2I review results
     - Record decision rationale in DynamoDB
     - Update Truth Engine training data with feedback
@@ -199,7 +199,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify certificates contain all required fields
     - Verify certificates cannot be modified after creation
   
-  - [ ] 10.4 Create certificate verification Lambda function
+  - [-] 10.4 Create certificate verification Lambda function
     - Query QLDB for certificate by ID
     - Verify cryptographic proof
     - Return certificate data and verification result
