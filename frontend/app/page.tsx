@@ -5,14 +5,16 @@ import Link from 'next/link'
 
 export default function Home() {
   const [claimData, setClaimData] = useState({
-    latitude: '19.0760',
-    longitude: '72.8777',
+    latitude: '',
+    longitude: '',
     timestamp: new Date().toISOString().slice(0, 16),
   })
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [isOnline, setIsOnline] = useState(true)
   const [isListening, setIsListening] = useState(false)
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'success' | 'error'>('idle')
+  const [locationError, setLocationError] = useState('')
 
   useEffect(() => {
     // Simulate network status check
@@ -21,11 +23,72 @@ export default function Home() {
     }
     window.addEventListener('online', checkNetwork)
     window.addEventListener('offline', checkNetwork)
+    
+    // Auto-detect location on page load
+    detectLocation()
+    
     return () => {
       window.removeEventListener('online', checkNetwork)
       window.removeEventListener('offline', checkNetwork)
     }
   }, [])
+
+  const detectLocation = () => {
+    setLocationStatus('detecting')
+    setLocationError('')
+    
+    if (!navigator.geolocation) {
+      setLocationStatus('error')
+      setLocationError('GPS not supported by your browser')
+      // Fallback to Mumbai coordinates
+      setClaimData(prev => ({
+        ...prev,
+        latitude: '19.0760',
+        longitude: '72.8777'
+      }))
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setClaimData(prev => ({
+          ...prev,
+          latitude: position.coords.latitude.toFixed(4),
+          longitude: position.coords.longitude.toFixed(4)
+        }))
+        setLocationStatus('success')
+      },
+      (error) => {
+        setLocationStatus('error')
+        let errorMessage = 'Unable to detect location'
+        
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location permission denied. Please enable GPS.'
+            break
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location unavailable. Using default location.'
+            break
+          case error.TIMEOUT:
+            errorMessage = 'Location request timeout. Using default location.'
+            break
+        }
+        
+        setLocationError(errorMessage)
+        // Fallback to Mumbai coordinates
+        setClaimData(prev => ({
+          ...prev,
+          latitude: '19.0760',
+          longitude: '72.8777'
+        }))
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
+  }
 
   const calculateSolarAzimuth = async () => {
     setLoading(true)
@@ -184,10 +247,75 @@ export default function Home() {
           {/* Demo Card */}
           <div className="bg-gradient-to-br from-slate-50 to-slate-100 border-4 border-emerald-600 rounded-3xl p-8 shadow-2xl">
             <div className="space-y-6">
+              {/* GPS Auto-Detection Status */}
+              {locationStatus !== 'idle' && (
+                <div className={`p-4 rounded-xl border-2 ${
+                  locationStatus === 'detecting' 
+                    ? 'bg-blue-50 border-blue-500' 
+                    : locationStatus === 'success'
+                    ? 'bg-emerald-50 border-emerald-500'
+                    : 'bg-amber-50 border-amber-500'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    {locationStatus === 'detecting' && (
+                      <>
+                        <svg className="animate-spin h-6 w-6 text-blue-600" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        <span className="text-blue-900 font-semibold">📍 Detecting your location via GPS...</span>
+                      </>
+                    )}
+                    {locationStatus === 'success' && (
+                      <>
+                        <span className="text-2xl">✅</span>
+                        <span className="text-emerald-900 font-semibold">Location detected successfully!</span>
+                      </>
+                    )}
+                    {locationStatus === 'error' && (
+                      <>
+                        <span className="text-2xl">⚠️</span>
+                        <span className="text-amber-900 font-semibold">{locationError}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* GPS Auto-Detect Button */}
+              <div className="bg-blue-50 border-2 border-blue-500 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-blue-900 mb-2">📍 Automatic Location Detection</h3>
+                    <p className="text-blue-800">No need to enter coordinates manually - we'll detect your location automatically!</p>
+                  </div>
+                </div>
+                <button
+                  onClick={detectLocation}
+                  disabled={locationStatus === 'detecting'}
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xl font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                >
+                  {locationStatus === 'detecting' ? (
+                    <>
+                      <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Detecting Location...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-2xl">📍</span>
+                      <span>Detect My Location (GPS)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               {/* Latitude Input with Voice */}
               <div>
                 <label className="block text-lg font-bold text-slate-900 mb-3">
-                  Latitude (GPS Coordinates)
+                  Latitude (GPS Coordinates) {locationStatus === 'success' && <span className="text-emerald-600">✓ Auto-detected</span>}
                 </label>
                 <div className="flex gap-3">
                   <input
@@ -196,7 +324,8 @@ export default function Home() {
                     value={claimData.latitude}
                     onChange={(e) => setClaimData({ ...claimData, latitude: e.target.value })}
                     className="flex-1 px-6 py-4 text-2xl border-3 border-slate-300 rounded-xl focus:border-emerald-600 focus:ring-4 focus:ring-emerald-200 outline-none transition-all"
-                    placeholder="19.0760"
+                    placeholder="Will be auto-detected"
+                    readOnly={locationStatus === 'detecting'}
                   />
                   <button
                     onClick={handleVoiceInput}
@@ -219,7 +348,7 @@ export default function Home() {
               {/* Longitude Input with Voice */}
               <div>
                 <label className="block text-lg font-bold text-slate-900 mb-3">
-                  Longitude (GPS Coordinates)
+                  Longitude (GPS Coordinates) {locationStatus === 'success' && <span className="text-emerald-600">✓ Auto-detected</span>}
                 </label>
                 <div className="flex gap-3">
                   <input
@@ -228,7 +357,8 @@ export default function Home() {
                     value={claimData.longitude}
                     onChange={(e) => setClaimData({ ...claimData, longitude: e.target.value })}
                     className="flex-1 px-6 py-4 text-2xl border-3 border-slate-300 rounded-xl focus:border-emerald-600 focus:ring-4 focus:ring-emerald-200 outline-none transition-all"
-                    placeholder="72.8777"
+                    placeholder="Will be auto-detected"
+                    readOnly={locationStatus === 'detecting'}
                   />
                   <button
                     onClick={handleVoiceInput}
