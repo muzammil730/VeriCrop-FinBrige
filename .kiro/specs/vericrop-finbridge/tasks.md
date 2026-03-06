@@ -95,13 +95,13 @@ The implementation follows an incremental approach: core infrastructure → fore
 
 
 - [ ] 6. Implement Amazon Rekognition video analysis
-  - [-] 6.1 Create Rekognition integration Lambda function
+  - [x] 6.1 Create Rekognition integration Lambda function
     - Configure Rekognition Custom Labels for crop damage patterns
     - Implement video analysis for object detection
     - Extract metadata (GPS, timestamp, device info) from video files
     - _Requirements: 2.4_
   
-  - [ ] 6.2 Create evidence storage Lambda function with SHA-256 hashing
+  - [-] 6.2 Create evidence storage Lambda function with SHA-256 hashing
     - Calculate SHA-256 hash of all evidence files
     - Store files in S3 with Object Lock enabled
     - Store hash in DynamoDB for integrity verification
