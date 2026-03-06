@@ -101,7 +101,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Extract metadata (GPS, timestamp, device info) from video files
     - _Requirements: 2.4_
   
-  - [-] 6.2 Create evidence storage Lambda function with SHA-256 hashing
+  - [x] 6.2 Create evidence storage Lambda function with SHA-256 hashing
     - Calculate SHA-256 hash of all evidence files
     - Store files in S3 with Object Lock enabled
     - Store hash in DynamoDB for integrity verification
@@ -143,7 +143,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify rejections include specific feedback
 
 - [ ] 8. Implement Amazon A2I human-in-the-loop workflow
-  - [ ] 8.1 Create A2I workflow configuration
+  - [-] 8.1 Create A2I workflow configuration
     - Configure A2I task template for claim review
     - Set up workteam for human reviewers
     - Define UI template for evidence presentation
@@ -163,7 +163,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify low-confidence claims are routed to HITL
     - Verify approximately 5% of claims are randomly audited
   
-  - [ ] 8.4 Create human review result processing Lambda function
+  - [-] 8.4 Create human review result processing Lambda function
     - Retrieve A2I review results
     - Record decision rationale in DynamoDB
     - Update Truth Engine training data with feedback
