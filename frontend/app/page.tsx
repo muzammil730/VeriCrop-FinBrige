@@ -1,7 +1,7 @@
-// VeriCrop FinBridge - Trigger rebuild with fixed amplify.yml
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -54,6 +54,13 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <nav className={styles.nav}>
+        <Link href="/" className={styles.active}>Home</Link>
+        <Link href="/claim-submission">Submit Claim</Link>
+        <Link href="/verify-certificate">Verify Certificate</Link>
+        <Link href="/bridge-loan">Bridge Loan</Link>
+      </nav>
+
       <div className={styles.container}>
         <header className={styles.header}>
           <h1>🌾 VeriCrop FinBridge</h1>
