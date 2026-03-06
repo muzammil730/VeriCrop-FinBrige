@@ -199,7 +199,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Verify certificates contain all required fields
     - Verify certificates cannot be modified after creation
   
-  - [-] 10.4 Create certificate verification Lambda function
+  - [x] 10.4 Create certificate verification Lambda function
     - Query QLDB for certificate by ID
     - Verify cryptographic proof
     - Return certificate data and verification result
