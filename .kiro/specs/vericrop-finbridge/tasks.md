@@ -356,7 +356,7 @@ The implementation follows an incremental approach: core infrastructure → fore
     - Enable encryption for QLDB ledger
     - Configure automatic key rotation
   
-  - [ ] 16.2 Configure Amazon Cognito authentication
+  - [x] 16.2 Configure Amazon Cognito authentication
     - Create Cognito User Pool for farmers
     - Enable SMS-based MFA
     - Configure JWT token expiration (1 hour)
