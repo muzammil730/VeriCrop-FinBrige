@@ -16,9 +16,9 @@ export default function Home() {
   const calculateSolarAzimuth = async () => {
     setLoading(true)
     try {
-      // Call the deployed Lambda function
+      // Call the deployed Lambda function via API Gateway
       const response = await fetch(
-        'https://YOUR_API_GATEWAY_URL/solar-azimuth',
+        'https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/analysis/solar',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -284,21 +284,21 @@ export default function Home() {
           </p>
           <div className={styles.links}>
             <a
-              href="https://github.com/YOUR_REPO"
+              href="https://github.com/muzammil730/VeriCrop-FinBrige"
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHub
             </a>
             <a
-              href="https://github.com/YOUR_REPO/blob/main/README.md"
+              href="https://github.com/muzammil730/VeriCrop-FinBrige/blob/main/README.md"
               target="_blank"
               rel="noopener noreferrer"
             >
               Documentation
             </a>
             <a
-              href="https://github.com/YOUR_REPO/blob/main/TECHNICAL_ROADMAP.md"
+              href="https://github.com/muzammil730/VeriCrop-FinBrige/blob/main/TECHNICAL_ROADMAP.md"
               target="_blank"
               rel="noopener noreferrer"
             >
