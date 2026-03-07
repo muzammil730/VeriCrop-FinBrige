@@ -70,7 +70,7 @@ export default function ClaimSubmission() {
   const submitClaim = async () => {
     setLoading(true)
     
-    // DEMO MODE: Simulate successful claim submission for hackathon presentation
+    // DEMO MODE: Simulate claim submission with fraud detection for hackathon presentation
     // TODO: Connect to real API endpoint after hackathon
     try {
       // Simulate API delay
@@ -80,26 +80,64 @@ export default function ClaimSubmission() {
       const timestamp = new Date().toISOString().split('T')[0]
       const randomId = Math.floor(Math.random() * 10000).toString().padStart(5, '0')
       const claimId = `CLAIM-${timestamp}-${randomId}`
-      const certificateId = `CERT-${timestamp}-${randomId}`
       
-      // Simulate successful response
-      const demoResult = {
-        claimId,
-        certificateId,
-        status: 'APPROVED',
-        validationScore: 95,
-        farmerName: formData.farmerName,
-        damageAmount: parseFloat(formData.estimatedDamage),
-        timestamp: new Date().toISOString(),
-        validations: {
-          solarAzimuth: 'PASS',
-          weatherCorrelation: 'PASS',
-          aiClassification: 'PASS',
-          bedrockAnalysis: 'APPROVE'
+      // FRAUD DETECTION LOGIC
+      const damagePercentage = parseFloat(formData.damagePercentage || '0')
+      const estimatedDamage = parseFloat(formData.estimatedDamage || '0')
+      
+      // Fraud indicators:
+      // 1. Damage percentage > 90% (suspiciously high)
+      // 2. Estimated damage > 100000 (suspiciously high amount)
+      // 3. Missing critical fields
+      
+      const isFraudulent = 
+        damagePercentage > 90 || 
+        estimatedDamage > 100000 ||
+        !formData.farmerName ||
+        !formData.phoneNumber
+      
+      if (isFraudulent) {
+        // REJECTED CLAIM
+        const rejectedResult = {
+          claimId,
+          status: 'REJECTED',
+          validationScore: damagePercentage > 90 ? 35 : 45,
+          farmerName: formData.farmerName,
+          damageAmount: estimatedDamage,
+          timestamp: new Date().toISOString(),
+          rejectionReason: damagePercentage > 90 
+            ? 'Suspicious damage percentage (>90%). AI fraud detection flagged this claim.'
+            : estimatedDamage > 100000
+            ? 'Suspiciously high damage amount. Requires manual review.'
+            : 'Missing critical information. Please complete all required fields.',
+          validations: {
+            solarAzimuth: damagePercentage > 90 ? 'FAIL' : 'PASS',
+            weatherCorrelation: 'PASS',
+            aiClassification: damagePercentage > 90 ? 'FRAUD_DETECTED' : 'SUSPICIOUS',
+            bedrockAnalysis: 'REJECT'
+          }
         }
+        setResult(rejectedResult)
+      } else {
+        // APPROVED CLAIM
+        const certificateId = `CERT-${timestamp}-${randomId}`
+        const approvedResult = {
+          claimId,
+          certificateId,
+          status: 'APPROVED',
+          validationScore: 95,
+          farmerName: formData.farmerName,
+          damageAmount: estimatedDamage,
+          timestamp: new Date().toISOString(),
+          validations: {
+            solarAzimuth: 'PASS',
+            weatherCorrelation: 'PASS',
+            aiClassification: 'PASS',
+            bedrockAnalysis: 'APPROVE'
+          }
+        }
+        setResult(approvedResult)
       }
-      
-      setResult(demoResult)
       
       /* PRODUCTION CODE (uncomment when API is ready):
       const response = await fetch(
@@ -428,7 +466,9 @@ export default function ClaimSubmission() {
           {result && (
             <div className={`mt-8 p-8 rounded-2xl border-4 ${
               result.error 
-                ? 'bg-red-50 border-red-600' 
+                ? 'bg-red-50 border-red-600'
+                : result.status === 'REJECTED'
+                ? 'bg-amber-50 border-amber-600'
                 : 'bg-emerald-50 border-emerald-600'
             }`}>
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
@@ -438,6 +478,13 @@ export default function ClaimSubmission() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span className="text-red-900">Error</span>
+                  </>
+                ) : result.status === 'REJECTED' ? (
+                  <>
+                    <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span className="text-amber-900">Claim Rejected - Fraud Detected</span>
                   </>
                 ) : (
                   <>
@@ -450,6 +497,49 @@ export default function ClaimSubmission() {
               </h3>
               {result.error ? (
                 <p className="text-xl text-red-900">{result.error}</p>
+              ) : result.status === 'REJECTED' ? (
+                <>
+                  <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                    <p className="text-lg font-semibold text-amber-900 mb-3">Rejection Reason:</p>
+                    <p className="text-amber-800">{result.rejectionReason}</p>
+                  </div>
+                  
+                  <div className="grid sm:grid-cols-2 gap-6 mb-6">
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                      <p className="text-sm font-medium text-slate-600 mb-2">Claim ID</p>
+                      <p className="text-2xl font-bold text-amber-900">{result.claimId}</p>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                      <p className="text-sm font-medium text-slate-600 mb-2">Status</p>
+                      <p className="text-2xl font-bold text-red-900">{result.status}</p>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                      <p className="text-sm font-medium text-slate-600 mb-2">Validation Score</p>
+                      <p className="text-2xl font-bold text-amber-900">{result.validationScore}%</p>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl shadow-sm">
+                      <p className="text-sm font-medium text-slate-600 mb-2">Damage Amount</p>
+                      <p className="text-2xl font-bold text-slate-900">₹{result.damageAmount?.toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Validation Results */}
+                  <div className="bg-white p-6 rounded-xl shadow-sm">
+                    <p className="text-lg font-semibold text-slate-900 mb-4">Validation Results:</p>
+                    <div className="space-y-3">
+                      {Object.entries(result.validations || {}).map(([key, value]: [string, any]) => (
+                        <div key={key} className="flex items-center justify-between">
+                          <span className="text-slate-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+                          <span className={`font-semibold ${
+                            value === 'PASS' || value === 'APPROVE' ? 'text-emerald-600' : 'text-red-600'
+                          }`}>
+                            {value === 'PASS' || value === 'APPROVE' ? '✓' : '✗'} {value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="grid sm:grid-cols-2 gap-6 mb-6">
