@@ -117,7 +117,7 @@ export default function VerifyCertificate() {
             <div className={`mt-8 p-8 rounded-2xl shadow-lg animate-scale-in ${
               result.error 
                 ? 'bg-gradient-to-br from-red-50 to-red-100/50 border border-red-200' 
-                : result.valid
+                : result.isValid
                 ? 'bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200'
                 : 'bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200'
             }`}>
@@ -131,7 +131,7 @@ export default function VerifyCertificate() {
                   </div>
                   <p className="text-red-700">{result.error}</p>
                 </>
-              ) : result.valid ? (
+              ) : result.isValid ? (
                 <>
                   <div className="flex items-center gap-3 mb-6">
                     <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,32 +144,36 @@ export default function VerifyCertificate() {
                   <div className="grid sm:grid-cols-2 gap-4 mb-6">
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Certificate ID</p>
-                      <p className="text-sm font-semibold text-slate-900">{result.certificateId}</p>
+                      <p className="text-sm font-semibold text-slate-900">{result.certificate?.certificateId}</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow-sm">
+                      <p className="text-xs font-medium text-slate-600 mb-1">Farmer Name</p>
+                      <p className="text-sm font-semibold text-slate-900">{result.certificate?.farmerName}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Farmer ID</p>
-                      <p className="text-sm font-semibold text-slate-900">{result.farmerId}</p>
+                      <p className="text-sm font-semibold text-slate-900">{result.certificate?.farmerId}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Damage Amount</p>
-                      <p className="text-sm font-semibold text-emerald-900">₹{result.damageAmount?.toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-emerald-900">₹{result.certificate?.damageAmount?.toLocaleString()}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Validation Score</p>
-                      <p className="text-sm font-semibold text-blue-900">{result.validationScore}%</p>
+                      <p className="text-sm font-semibold text-blue-900">{result.certificate?.validationScore}%</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Status</p>
-                      <p className="text-sm font-semibold text-emerald-900">{result.status}</p>
+                      <p className="text-sm font-semibold text-emerald-900">{result.certificate?.status}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-sm">
                       <p className="text-xs font-medium text-slate-600 mb-1">Issued Date</p>
-                      <p className="text-sm font-semibold text-slate-900">{new Date(result.issuedAt).toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-slate-900">{result.certificate?.issuedAt ? new Date(result.certificate.issuedAt).toLocaleString() : 'N/A'}</p>
                     </div>
-                    {result.expiryDate && (
-                      <div className="bg-white p-4 rounded-lg shadow-sm sm:col-span-2">
+                    {result.certificate?.expiryDate && (
+                      <div className="bg-white p-4 rounded-lg shadow-sm">
                         <p className="text-xs font-medium text-slate-600 mb-1">Expiry Date</p>
-                        <p className="text-sm font-semibold text-slate-900">{new Date(result.expiryDate).toLocaleString()}</p>
+                        <p className="text-sm font-semibold text-slate-900">{new Date(result.certificate.expiryDate).toLocaleString()}</p>
                       </div>
                     )}
                   </div>
@@ -178,7 +182,7 @@ export default function VerifyCertificate() {
                   <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
                     <p className="text-xs font-medium text-slate-600 mb-2">Cryptographic Hash (SHA-256)</p>
                     <p className="text-xs font-mono text-slate-900 break-all bg-slate-50 p-3 rounded border border-slate-200">
-                      {result.hash}
+                      {result.certificate?.blockchainHash}
                     </p>
                   </div>
 
@@ -208,23 +212,23 @@ export default function VerifyCertificate() {
                       const certificateContent = `
 VeriCrop FinBridge - Loss Certificate
 
-Certificate ID: ${result.certificateId}
-Farmer ID: ${result.farmerId}
-Farmer Name: ${result.farmerName || 'Ramesh Kumar'}
-Damage Amount: ₹${result.damageAmount?.toLocaleString()}
-Status: ${result.status}
-Validation Score: ${result.validationScore}%
-Issue Date: ${new Date(result.issuedAt).toLocaleString()}
-Expiry Date: ${result.expiryDate ? new Date(result.expiryDate).toLocaleString() : 'N/A'}
+Certificate ID: ${result.certificate?.certificateId}
+Farmer ID: ${result.certificate?.farmerId}
+Farmer Name: ${result.certificate?.farmerName}
+Damage Amount: ₹${result.certificate?.damageAmount?.toLocaleString()}
+Status: ${result.certificate?.status}
+Validation Score: ${result.certificate?.validationScore}%
+Issue Date: ${result.certificate?.issuedAt ? new Date(result.certificate.issuedAt).toLocaleString() : 'N/A'}
+Expiry Date: ${result.certificate?.expiryDate ? new Date(result.certificate.expiryDate).toLocaleString() : 'N/A'}
 
 Cryptographic Hash (SHA-256):
-${result.hash}
+${result.certificate?.blockchainHash}
 
-Validation Results:
-✓ Solar Azimuth: PASS
-✓ Weather Correlation: PASS
-✓ AI Classification: PASS
-✓ Bedrock Analysis: APPROVE
+Verification Details:
+✓ Certificate Exists: ${result.verificationDetails?.certificateExists ? 'YES' : 'NO'}
+✓ Hash Verified: ${result.verificationDetails?.hashVerified ? 'YES' : 'NO'}
+✓ Not Expired: ${result.verificationDetails?.notExpired ? 'YES' : 'NO'}
+✓ Status Valid: ${result.verificationDetails?.statusValid ? 'YES' : 'NO'}
 
 Storage:
 - Stored on DynamoDB with SHA-256 hashing
@@ -234,6 +238,7 @@ Storage:
 This certificate is cryptographically secured with SHA-256 hashing.
 Any tampering will cause hash mismatch and invalidate the certificate.
 
+Verified At: ${result.verifiedAt}
 Issued by: VeriCrop FinBridge
 Powered by: AWS (Bedrock, Rekognition, SageMaker, Lambda, Step Functions)
                       `.trim()
@@ -243,7 +248,7 @@ Powered by: AWS (Bedrock, Rekognition, SageMaker, Lambda, Step Functions)
                       const url = URL.createObjectURL(blob)
                       const a = document.createElement('a')
                       a.href = url
-                      a.download = `${result.certificateId}.txt`
+                      a.download = `${result.certificate?.certificateId}.txt`
                       document.body.appendChild(a)
                       a.click()
                       document.body.removeChild(a)
