@@ -1,1 +1,0 @@
-{"claimId":"CLAIM-2026-03-001","actualShadowAngle":236.1783634400532,"expectedShadowAngle":135.5,"angleDifference":100.6783634400532,"fraudRiskLevel":"HIGH","fraudRiskScore":100,"validationStatus":"REJECTED","confidence":0.4,"detectionMethod":"Rekognition Custom Labels + Solar Azimuth Formula","processingTimeMs":507}

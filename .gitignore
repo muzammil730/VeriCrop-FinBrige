@@ -1,16 +1,53 @@
+# ========================================
+# SECURITY - CREDENTIALS AND SECRETS
+# ========================================
 # GitHub Token (SECURITY - DO NOT COMMIT)
 Github Token.txt
 *.token
 *.secret
+*.pem
+*.key
+*.p12
+*.pfx
 
-# Python
+# AWS Credentials (CRITICAL - NEVER COMMIT)
+.aws/
+aws-credentials.json
+credentials.json
+*credentials*.json
+*.credentials
+
+# Environment Variables (SECURITY)
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.test
+.env.staging
+!.env.example
+!.env.template
+
+# API Keys and Secrets
+*apikey*
+*api-key*
+*secret*
+*password*
+config/secrets.yml
+config/credentials.yml
+
+# ========================================
+# PYTHON
+# ========================================
 venv/
+env/
+ENV/
+.venv/
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -23,55 +60,185 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+*.manifest
+*.spec
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+*.mo
+*.pot
 
-# Node
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# ========================================
+# NODE.JS / NPM / YARN
+# ========================================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 .npm
 .eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+.pnp.*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
 
-# CDK
+# ========================================
+# AWS CDK
+# ========================================
 cdk.out/
+.cdk.staging/
+cdk.context.json
 *.d.ts
 *.js.map
 
-# CDK JavaScript files (exclude these)
+# CDK JavaScript files (exclude transpiled files)
 infrastructure/**/*.js
 !infrastructure/jest.config.js
+backend/**/*.js
+!backend/**/*.config.js
 
 # But keep frontend config files
 !frontend/next.config.js
 !frontend/**/*.config.js
 
-# IDE
+# ========================================
+# SERVERLESS FRAMEWORK
+# ========================================
+.serverless/
+.serverless_plugins/
+
+# ========================================
+# TERRAFORM
+# ========================================
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+
+# ========================================
+# IDE AND EDITORS
+# ========================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
 
-# OS
+# ========================================
+# OPERATING SYSTEM
+# ========================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Logs
+# ========================================
+# LOGS AND DEBUGGING
+# ========================================
 *.log
 logs/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Next.js
+# ========================================
+# NEXT.JS
+# ========================================
 .next/
 out/
+.vercel
+.turbo
 
-# Misc
+# ========================================
+# TESTING
+# ========================================
+coverage/
+.nyc_output/
+.jest/
+test-results/
+*.test.js.snap
+
+# ========================================
+# BUILD ARTIFACTS
+# ========================================
+dist/
+build/
+*.zip
+*.tar.gz
+*.rar
+
+# ========================================
+# TEMPORARY FILES
+# ========================================
 *.bak
 *.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# ========================================
+# MACHINE LEARNING
+# ========================================
+*.h5
+*.pkl
+*.pickle
+*.model
+*.weights
+*.ckpt
+models/
+checkpoints/
+*.safetensors
+
+# SageMaker
+.sagemaker/
+sagemaker-output/
+
+# ========================================
+# DOCUMENTATION ARTIFACTS
+# ========================================
+# Keep all markdown documentation for judges
+# Only exclude generated/temporary docs
+*.draft.md
+*.wip.md
