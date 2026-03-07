@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import AppShell from '@/app/components/AppShell'
 
 export default function Home() {
   const [claimData, setClaimData] = useState({
@@ -11,26 +11,11 @@ export default function Home() {
   })
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const [isOnline, setIsOnline] = useState(true)
-  const [isListening, setIsListening] = useState(false)
   const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'success' | 'error'>('idle')
   const [locationError, setLocationError] = useState('')
 
   useEffect(() => {
-    // Simulate network status check
-    const checkNetwork = () => {
-      setIsOnline(navigator.onLine)
-    }
-    window.addEventListener('online', checkNetwork)
-    window.addEventListener('offline', checkNetwork)
-    
-    // Auto-detect location on page load
     detectLocation()
-    
-    return () => {
-      window.removeEventListener('online', checkNetwork)
-      window.removeEventListener('offline', checkNetwork)
-    }
   }, [])
 
   const detectLocation = () => {
@@ -39,13 +24,8 @@ export default function Home() {
     
     if (!navigator.geolocation) {
       setLocationStatus('error')
-      setLocationError('GPS not supported by your browser')
-      // Fallback to Mumbai coordinates
-      setClaimData(prev => ({
-        ...prev,
-        latitude: '19.0760',
-        longitude: '72.8777'
-      }))
+      setLocationError('GPS not supported')
+      setClaimData(prev => ({ ...prev, latitude: '19.0760', longitude: '72.8777' }))
       return
     }
 
@@ -60,33 +40,10 @@ export default function Home() {
       },
       (error) => {
         setLocationStatus('error')
-        let errorMessage = 'Unable to detect location'
-        
-        switch(error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = 'Location permission denied. Please enable GPS.'
-            break
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Location unavailable. Using default location.'
-            break
-          case error.TIMEOUT:
-            errorMessage = 'Location request timeout. Using default location.'
-            break
-        }
-        
-        setLocationError(errorMessage)
-        // Fallback to Mumbai coordinates
-        setClaimData(prev => ({
-          ...prev,
-          latitude: '19.0760',
-          longitude: '72.8777'
-        }))
+        setLocationError('Location unavailable')
+        setClaimData(prev => ({ ...prev, latitude: '19.0760', longitude: '72.8777' }))
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     )
   }
 
@@ -109,7 +66,6 @@ export default function Home() {
       const data = await response.json()
       setResult(data)
     } catch (error) {
-      console.error('Error:', error)
       setResult({
         claimId: `demo-${Date.now()}`,
         solarAzimuth: 201.89,
@@ -127,332 +83,274 @@ export default function Home() {
     setLoading(false)
   }
 
-  const handleVoiceInput = () => {
-    setIsListening(!isListening)
-    // Voice input simulation - in production, integrate with Web Speech API
-    if (!isListening) {
-      setTimeout(() => setIsListening(false), 3000)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Network Status Indicator */}
-      <div className="fixed top-4 right-4 z-50">
-        <div className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-lg ${
-          isOnline 
-            ? 'bg-emerald-50 border-2 border-emerald-600' 
-            : 'bg-amber-50 border-2 border-amber-600'
-        }`}>
-          <div className={`w-3 h-3 rounded-full ${
-            isOnline ? 'bg-emerald-600 animate-pulse' : 'bg-amber-600'
-          }`} />
-          <span className={`text-sm font-semibold ${
-            isOnline ? 'text-emerald-900' : 'text-amber-900'
-          }`}>
-            {isOnline ? 'Online' : 'Offline Mode (AWS IoT Greengrass)'}
-          </span>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-white border-b-2 border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <span className="text-3xl">🌾</span>
-              <span className="text-xl font-bold text-emerald-900">VeriCrop FinBridge</span>
-            </div>
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-emerald-900 font-semibold border-b-2 border-emerald-600 pb-1">
-                Home
-              </Link>
-              <Link href="/claim-submission" className="text-slate-700 hover:text-emerald-900 font-medium transition-colors">
-                Submit Claim
-              </Link>
-              <Link href="/verify-certificate" className="text-slate-700 hover:text-emerald-900 font-medium transition-colors">
-                Verify Certificate
-              </Link>
-              <Link href="/bridge-loan" className="text-slate-700 hover:text-emerald-900 font-medium transition-colors">
-                Bridge Loan
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <AppShell>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-blue-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-              60-Second Forensic AI for<br />Agricultural Insurance Claims
-            </h1>
-            <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto">
-              Physics-based fraud detection • Zero-interest bridge loans • Blockchain certificates
-            </p>
-          </div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 text-white">
+        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-8 animate-slide-up">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                60-Second Forensic AI for Agricultural Insurance
+              </h1>
+              <p className="text-xl text-slate-300">
+                Physics-based fraud detection. Zero-interest bridge loans. Blockchain certificates.
+              </p>
 
-          {/* Problem vs Solution */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {/* Problem */}
-            <div className="bg-red-50 border-4 border-red-600 rounded-2xl p-8 shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-4xl">❌</span>
-                <h3 className="text-2xl font-bold text-red-900">The Problem</h3>
-              </div>
-              <div className="space-y-3 text-red-900">
-                <p className="text-xl font-semibold">
-                  Farmers wait <span className="text-3xl font-bold">6 months</span> for insurance payouts
-                </p>
-                <p className="text-xl font-semibold">
-                  Forced into <span className="text-3xl font-bold">24%</span> interest debt traps
-                </p>
-                <p className="text-lg">Manual verification • High fraud • Delayed relief</p>
+              {/* Comparison Cards */}
+              <div className="grid sm:grid-cols-2 gap-4 mt-8">
+                {/* Old Way */}
+                <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-red-400">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span className="font-semibold">Old Way</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">6</span>
+                      <span className="text-slate-300">months wait</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">24%</span>
+                      <span className="text-slate-300">interest debt</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* New Way */}
+                <div className="bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/20 rounded-xl p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-semibold">New Way</span>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">60</span>
+                      <span className="text-slate-300">seconds</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-bold">0%</span>
+                      <span className="text-slate-300">interest</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Solution */}
-            <div className="bg-emerald-50 border-4 border-emerald-600 rounded-2xl p-8 shadow-xl">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-4xl">✅</span>
-                <h3 className="text-2xl font-bold text-emerald-900">Our Solution</h3>
-              </div>
-              <div className="space-y-3 text-emerald-900">
-                <p className="text-xl font-semibold">
-                  Validate claims in <span className="text-3xl font-bold">60 seconds</span>
-                </p>
-                <p className="text-xl font-semibold">
-                  Zero-interest bridge loans at <span className="text-3xl font-bold">0%</span>
-                </p>
-                <p className="text-lg">AI + Physics • Blockchain • Instant liquidity</p>
+            {/* Right Content - Floating SVG */}
+            <div className="hidden lg:block">
+              <div className="relative">
+                <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+                <svg className="relative w-full h-auto animate-float" viewBox="0 0 400 400" fill="none">
+                  <circle cx="200" cy="200" r="150" stroke="url(#gradient)" strokeWidth="2" strokeDasharray="4 4" opacity="0.3" />
+                  <circle cx="200" cy="200" r="100" fill="url(#gradient)" opacity="0.1" />
+                  <circle cx="200" cy="200" r="60" fill="url(#gradient)" opacity="0.2" />
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="#059669" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive Demo Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">
-              🔬 Live Demo: Solar Azimuth Fraud Detection
+      {/* Solar Azimuth Engine */}
+      <section className="py-20 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 animate-slide-up">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+              The Engine: Solar Azimuth Fraud Detection
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-lg text-slate-600">
               World's first physics-based fraud detection using solar geometry
             </p>
           </div>
 
-          {/* Demo Card */}
-          <div className="bg-gradient-to-br from-slate-50 to-slate-100 border-4 border-emerald-600 rounded-3xl p-8 shadow-2xl">
-            <div className="space-y-6">
-              {/* GPS Auto-Detection Status */}
-              {locationStatus !== 'idle' && (
-                <div className={`p-4 rounded-xl border-2 ${
-                  locationStatus === 'detecting' 
-                    ? 'bg-blue-50 border-blue-500' 
-                    : locationStatus === 'success'
-                    ? 'bg-emerald-50 border-emerald-500'
-                    : 'bg-amber-50 border-amber-500'
-                }`}>
-                  <div className="flex items-center gap-3">
-                    {locationStatus === 'detecting' && (
-                      <>
-                        <svg className="animate-spin h-6 w-6 text-blue-600" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        <span className="text-blue-900 font-semibold">📍 Detecting your location via GPS...</span>
-                      </>
-                    )}
-                    {locationStatus === 'success' && (
-                      <>
-                        <span className="text-2xl">✅</span>
-                        <span className="text-emerald-900 font-semibold">Location detected successfully!</span>
-                      </>
-                    )}
-                    {locationStatus === 'error' && (
-                      <>
-                        <span className="text-2xl">⚠️</span>
-                        <span className="text-amber-900 font-semibold">{locationError}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* GPS Auto-Detect Button */}
-              <div className="bg-blue-50 border-2 border-blue-500 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-blue-900 mb-2">📍 Automatic Location Detection</h3>
-                    <p className="text-blue-800">No need to enter coordinates manually - we'll detect your location automatically!</p>
-                  </div>
-                </div>
-                <button
-                  onClick={detectLocation}
-                  disabled={locationStatus === 'detecting'}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xl font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-                >
-                  {locationStatus === 'detecting' ? (
+          {/* Glassmorphism Dashboard */}
+          <div className="glass rounded-2xl shadow-xl p-8 space-y-6 animate-scale-in">
+            {/* Location Status */}
+            {locationStatus !== 'idle' && (
+              <div className={`p-4 rounded-xl border ${
+                locationStatus === 'detecting' 
+                  ? 'bg-blue-50 border-blue-200' 
+                  : locationStatus === 'success'
+                  ? 'bg-emerald-50 border-emerald-200'
+                  : 'bg-amber-50 border-amber-200'
+              }`}>
+                <div className="flex items-center gap-3">
+                  {locationStatus === 'detecting' && (
                     <>
-                      <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      <span>Detecting Location...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-2xl">📍</span>
-                      <span>Detect My Location (GPS)</span>
+                      <span className="text-blue-900 font-medium">Detecting your location...</span>
                     </>
                   )}
-                </button>
+                  {locationStatus === 'success' && (
+                    <>
+                      <svg className="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-emerald-900 font-medium">Location detected successfully</span>
+                    </>
+                  )}
+                  {locationStatus === 'error' && (
+                    <>
+                      <svg className="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span className="text-amber-900 font-medium">{locationError}</span>
+                    </>
+                  )}
+                </div>
               </div>
+            )}
 
-              {/* Latitude Input with Voice */}
-              <div>
-                <label className="block text-lg font-bold text-slate-900 mb-3">
-                  Latitude (GPS Coordinates) {locationStatus === 'success' && <span className="text-emerald-600">✓ Auto-detected</span>}
+            {/* GPS Auto-Detect Button */}
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-6 border border-blue-200">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-blue-900 mb-2">Automatic Location Detection</h3>
+                <p className="text-sm text-blue-700">GPS coordinates detected automatically for accurate analysis</p>
+              </div>
+              <button
+                onClick={detectLocation}
+                disabled={locationStatus === 'detecting'}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {locationStatus === 'detecting' ? 'Detecting Location...' : 'Detect My Location'}
+              </button>
+            </div>
+
+            {/* Input Fields */}
+            <div className="grid sm:grid-cols-2 gap-6">
+              {/* Latitude */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Latitude {locationStatus === 'success' && <span className="text-emerald-600">(Auto-detected)</span>}
                 </label>
-                <div className="flex gap-3">
+                <div className="relative">
                   <input
                     type="number"
                     step="0.0001"
                     value={claimData.latitude}
                     onChange={(e) => setClaimData({ ...claimData, latitude: e.target.value })}
-                    className="flex-1 px-6 py-4 text-2xl border-3 border-slate-300 rounded-xl focus:border-emerald-600 focus:ring-4 focus:ring-emerald-200 outline-none transition-all"
-                    placeholder="Will be auto-detected"
                     readOnly={locationStatus === 'detecting'}
+                    className="w-full px-4 py-3 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    placeholder="19.0760"
                   />
-                  <button
-                    onClick={handleVoiceInput}
-                    className={`px-6 py-4 rounded-xl font-bold text-white transition-all transform hover:scale-105 shadow-lg ${
-                      isListening 
-                        ? 'bg-red-600 animate-pulse' 
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
-                    title="Voice Input (Hindi/Tamil/Telugu)"
-                  >
-                    <span className="text-3xl">🎤</span>
-                  </button>
+                  <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
                 </div>
-                <p className="mt-2 text-sm text-slate-600 flex items-center gap-2">
-                  <span className="text-xl">🗣️</span>
-                  <span className="font-semibold">Voice-First Interface: Hindi • Tamil • Telugu support for low-literacy users</span>
-                </p>
               </div>
 
-              {/* Longitude Input with Voice */}
-              <div>
-                <label className="block text-lg font-bold text-slate-900 mb-3">
-                  Longitude (GPS Coordinates) {locationStatus === 'success' && <span className="text-emerald-600">✓ Auto-detected</span>}
+              {/* Longitude */}
+              <div className="relative">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Longitude {locationStatus === 'success' && <span className="text-emerald-600">(Auto-detected)</span>}
                 </label>
-                <div className="flex gap-3">
+                <div className="relative">
                   <input
                     type="number"
                     step="0.0001"
                     value={claimData.longitude}
                     onChange={(e) => setClaimData({ ...claimData, longitude: e.target.value })}
-                    className="flex-1 px-6 py-4 text-2xl border-3 border-slate-300 rounded-xl focus:border-emerald-600 focus:ring-4 focus:ring-emerald-200 outline-none transition-all"
-                    placeholder="Will be auto-detected"
                     readOnly={locationStatus === 'detecting'}
+                    className="w-full px-4 py-3 pr-10 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    placeholder="72.8777"
                   />
-                  <button
-                    onClick={handleVoiceInput}
-                    className={`px-6 py-4 rounded-xl font-bold text-white transition-all transform hover:scale-105 shadow-lg ${
-                      isListening 
-                        ? 'bg-red-600 animate-pulse' 
-                        : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
-                    title="Voice Input (Hindi/Tamil/Telugu)"
-                  >
-                    <span className="text-3xl">🎤</span>
-                  </button>
+                  <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
                 </div>
               </div>
-
-              {/* Timestamp Input */}
-              <div>
-                <label className="block text-lg font-bold text-slate-900 mb-3">
-                  Timestamp (When was the video recorded?)
-                </label>
-                <input
-                  type="datetime-local"
-                  value={claimData.timestamp}
-                  onChange={(e) => setClaimData({ ...claimData, timestamp: e.target.value })}
-                  className="w-full px-6 py-4 text-2xl border-3 border-slate-300 rounded-xl focus:border-emerald-600 focus:ring-4 focus:ring-emerald-200 outline-none transition-all"
-                />
-              </div>
-
-              {/* Calculate Button */}
-              <button
-                onClick={calculateSolarAzimuth}
-                disabled={loading}
-                className="w-full py-6 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-2xl font-bold rounded-xl shadow-xl transition-all transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-3">
-                    <svg className="animate-spin h-8 w-8" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <span>Validating via AWS Step Functions...</span>
-                  </span>
-                ) : (
-                  '🚀 Calculate Shadow Direction'
-                )}
-              </button>
             </div>
+
+            {/* Timestamp */}
+            <div className="relative">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Timestamp
+              </label>
+              <input
+                type="datetime-local"
+                value={claimData.timestamp}
+                onChange={(e) => setClaimData({ ...claimData, timestamp: e.target.value })}
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              />
+            </div>
+
+            {/* Calculate Button */}
+            <button
+              onClick={calculateSolarAzimuth}
+              disabled={loading}
+              className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Calculating...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span>Calculate Shadow Direction</span>
+                </>
+              )}
+            </button>
 
             {/* Results */}
             {result && (
-              <div className={`mt-8 p-8 rounded-2xl border-4 ${
-                result.demoMode 
-                  ? 'bg-amber-50 border-amber-500' 
-                  : 'bg-emerald-50 border-emerald-600'
-              }`}>
-                <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                  <span className="text-3xl">📊</span>
-                  Calculation Result
-                </h3>
+              <div className="mt-6 p-6 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 animate-scale-in">
+                <h3 className="text-lg font-semibold text-emerald-900 mb-4">Calculation Result</h3>
                 
                 {result.demoMode && (
-                  <div className="mb-6 p-4 bg-amber-100 border-2 border-amber-600 rounded-xl">
-                    <p className="text-amber-900 font-semibold flex items-center gap-2">
-                      <span className="text-2xl">ℹ️</span>
-                      Demo Mode - Connect to API Gateway for live results
-                    </p>
+                  <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm text-amber-900 font-medium">Demo Mode - Connect to API for live results</p>
                   </div>
                 )}
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-white p-6 rounded-xl border-2 border-slate-200 shadow-md">
-                    <p className="text-sm font-semibold text-slate-600 mb-2">Solar Azimuth</p>
-                    <p className="text-5xl font-bold text-emerald-900">{result.solarAzimuth?.toFixed(2)}°</p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <p className="text-xs font-medium text-slate-600 mb-1">Solar Azimuth</p>
+                    <p className="text-3xl font-bold text-emerald-900">{result.solarAzimuth?.toFixed(2)}°</p>
                   </div>
-                  <div className="bg-white p-6 rounded-xl border-2 border-slate-200 shadow-md">
-                    <p className="text-sm font-semibold text-slate-600 mb-2">Expected Shadow</p>
-                    <p className="text-5xl font-bold text-blue-900">{result.shadowDirection?.toFixed(2)}°</p>
+                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <p className="text-xs font-medium text-slate-600 mb-1">Shadow Direction</p>
+                    <p className="text-3xl font-bold text-blue-900">{result.shadowDirection?.toFixed(2)}°</p>
                   </div>
-                  <div className="bg-white p-6 rounded-xl border-2 border-slate-200 shadow-md">
-                    <p className="text-sm font-semibold text-slate-600 mb-2">Solar Declination</p>
-                    <p className="text-5xl font-bold text-slate-900">{result.calculation?.declination?.toFixed(2)}°</p>
+                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <p className="text-xs font-medium text-slate-600 mb-1">Declination</p>
+                    <p className="text-3xl font-bold text-slate-900">{result.calculation?.declination?.toFixed(2)}°</p>
                   </div>
-                  <div className="bg-white p-6 rounded-xl border-2 border-slate-200 shadow-md">
-                    <p className="text-sm font-semibold text-slate-600 mb-2">Hour Angle</p>
-                    <p className="text-5xl font-bold text-slate-900">{result.calculation?.hourAngle?.toFixed(2)}°</p>
+                  <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <p className="text-xs font-medium text-slate-600 mb-1">Hour Angle</p>
+                    <p className="text-3xl font-bold text-slate-900">{result.calculation?.hourAngle?.toFixed(2)}°</p>
                   </div>
                 </div>
 
-                <div className="mt-6 p-6 bg-blue-50 border-2 border-blue-600 rounded-xl">
-                  <p className="text-lg font-bold text-blue-900 mb-2">Physics Formula:</p>
-                  <p className="text-xl font-mono text-blue-900">sin α = sin Φ sin δ + cos Φ cos δ cos h</p>
-                  <p className="text-sm text-blue-800 mt-2">
-                    Where α = azimuth, Φ = latitude, δ = declination, h = hour angle
-                  </p>
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm font-semibold text-blue-900 mb-1">Physics Formula:</p>
+                  <p className="text-sm font-mono text-blue-900">sin α = sin Φ sin δ + cos Φ cos δ cos h</p>
                 </div>
               </div>
             )}
@@ -460,128 +358,78 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AWS Architecture Section */}
-      <section className="py-16 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
-            🏗️ AWS Architecture
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-slate-800 border-2 border-emerald-500 rounded-2xl p-6 shadow-xl">
-              <h3 className="text-xl font-bold text-emerald-400 mb-4">AI & ML Layer</h3>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400">▸</span>
-                  Amazon Bedrock (Agents + RAG)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400">▸</span>
-                  Amazon Rekognition
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400">▸</span>
-                  Amazon Lex + Polly
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400">▸</span>
-                  SageMaker Neo
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-800 border-2 border-blue-500 rounded-2xl p-6 shadow-xl">
-              <h3 className="text-xl font-bold text-blue-400 mb-4">Core Infrastructure</h3>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-400">▸</span>
-                  AWS Lambda (18 functions)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-400">▸</span>
-                  Step Functions Express
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-400">▸</span>
-                  DynamoDB (On-Demand)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-blue-400">▸</span>
-                  S3 with Object Lock
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-800 border-2 border-amber-500 rounded-2xl p-6 shadow-xl">
-              <h3 className="text-xl font-bold text-amber-400 mb-4">Blockchain & Edge</h3>
-              <ul className="space-y-3 text-lg">
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400">▸</span>
-                  Amazon QLDB
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400">▸</span>
-                  AWS IoT Greengrass v2
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400">▸</span>
-                  API Gateway
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400">▸</span>
-                  UPI Gateway Integration
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Impact Metrics */}
-      <section className="py-16 bg-gradient-to-r from-emerald-600 to-blue-600 text-white">
+      <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
-            📈 Impact Metrics
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-2xl p-8 text-center shadow-xl">
-              <p className="text-5xl md:text-6xl font-bold mb-2">99%</p>
-              <p className="text-lg font-semibold">Fraud Detection</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-2xl p-8 text-center shadow-xl">
-              <p className="text-5xl md:text-6xl font-bold mb-2">$0.50</p>
-              <p className="text-lg font-semibold">Cost per Claim</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-2xl p-8 text-center shadow-xl">
-              <p className="text-5xl md:text-6xl font-bold mb-2">0%</p>
-              <p className="text-lg font-semibold">Interest Rate</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-2xl p-8 text-center shadow-xl">
-              <p className="text-5xl md:text-6xl font-bold mb-2">60s</p>
-              <p className="text-lg font-semibold">Processing Time</p>
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Impact Metrics</h2>
+            <p className="text-lg text-slate-300">Transforming agricultural insurance at scale</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { value: '99%', label: 'Fraud Detection' },
+              { value: '$0.50', label: 'Cost per Claim' },
+              { value: '0%', label: 'Interest Rate' },
+              { value: '60s', label: 'Processing Time' },
+            ].map((metric, index) => (
+              <div
+                key={index}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center hover:bg-white/10 transition-all duration-300 animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <p className="text-4xl font-bold text-emerald-400 mb-2">{metric.value}</p>
+                <p className="text-sm text-slate-300">{metric.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-lg mb-4">Built with ❤️ for Indian Farmers | AI for Bharat Hackathon 2026</p>
-          <div className="flex justify-center gap-8 text-emerald-400">
-            <a href="https://github.com/muzammil730/VeriCrop-FinBrige" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors font-semibold">
-              GitHub
-            </a>
-            <a href="https://github.com/muzammil730/VeriCrop-FinBrige/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors font-semibold">
-              Documentation
-            </a>
-            <a href="https://github.com/muzammil730/VeriCrop-FinBrige/blob/main/TECHNICAL_ROADMAP.md" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors font-semibold">
-              Technical Roadmap
-            </a>
+      {/* AWS Architecture */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">AWS Architecture</h2>
+            <p className="text-lg text-slate-600">Enterprise-grade serverless infrastructure</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'AI & ML Layer',
+                services: ['Amazon Bedrock', 'Amazon Rekognition', 'Amazon Lex + Polly', 'SageMaker Neo'],
+              },
+              {
+                title: 'Core Infrastructure',
+                services: ['AWS Lambda (18 functions)', 'Step Functions Express', 'DynamoDB (On-Demand)', 'S3 with Object Lock'],
+              },
+              {
+                title: 'Blockchain & Edge',
+                services: ['Amazon QLDB', 'AWS IoT Greengrass v2', 'API Gateway', 'UPI Gateway Integration'],
+              },
+            ].map((layer, index) => (
+              <div
+                key={index}
+                className="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-all duration-300 animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">{layer.title}</h3>
+                <ul className="space-y-2">
+                  {layer.services.map((service, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
+                      <svg className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{service}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
-    </div>
+      </section>
+    </AppShell>
   )
 }
