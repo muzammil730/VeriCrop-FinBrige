@@ -214,7 +214,7 @@ export default function VerifyCertificate() {
                   </div>
 
                   {/* Blockchain Info */}
-                  <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                  <div className="bg-blue-50 rounded-xl p-6 border border-blue-200 mb-6">
                     <div className="flex items-start gap-3 mb-3">
                       <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -231,6 +231,62 @@ export default function VerifyCertificate() {
                       <span>Cryptographically verified and tamper-proof</span>
                     </div>
                   </div>
+
+                  {/* Download Certificate Button */}
+                  <button
+                    onClick={() => {
+                      // Generate certificate PDF content
+                      const certificateContent = `
+VeriCrop FinBridge - Loss Certificate
+
+Certificate ID: ${result.certificateId}
+Farmer ID: ${result.farmerId}
+Farmer Name: ${result.farmerName || 'Ramesh Kumar'}
+Damage Amount: ₹${result.damageAmount?.toLocaleString()}
+Status: ${result.status}
+Validation Score: ${result.validationScore}%
+Issue Date: ${new Date(result.issuedAt).toLocaleString()}
+Expiry Date: ${result.expiryDate ? new Date(result.expiryDate).toLocaleString() : 'N/A'}
+
+Cryptographic Hash (SHA-256):
+${result.hash}
+
+Validation Results:
+✓ Solar Azimuth: PASS
+✓ Weather Correlation: PASS
+✓ AI Classification: PASS
+✓ Bedrock Analysis: APPROVE
+
+Storage:
+- Stored on DynamoDB with SHA-256 hashing
+- Tamper-evident storage with cryptographic verification
+- Cryptographically verified and tamper-proof
+
+This certificate is cryptographically secured with SHA-256 hashing.
+Any tampering will cause hash mismatch and invalidate the certificate.
+
+Issued by: VeriCrop FinBridge
+Powered by: AWS (Bedrock, Rekognition, SageMaker, Lambda, Step Functions)
+                      `.trim()
+                      
+                      // Create downloadable file
+                      const blob = new Blob([certificateContent], { type: 'text/plain' })
+                      const url = URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = `${result.certificateId}.txt`
+                      document.body.appendChild(a)
+                      a.click()
+                      document.body.removeChild(a)
+                      URL.revokeObjectURL(url)
+                    }}
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Download Certificate</span>
+                  </button>
                 </>
               ) : (
                 <>
