@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 
+const inter = Inter({ subsets: ['latin'] })
+
 export const metadata: Metadata = {
-  title: 'VeriCrop FinBridge - 60-Second Forensic AI',
-  description: 'Reducing agricultural insurance claim processing from 6 months to 60 seconds using physics-based fraud detection',
+  title: 'VeriCrop FinBridge - 60-Second Agricultural Insurance',
+  description: 'Physics-based fraud detection for agricultural insurance claims',
 }
 
 export default function RootLayout({
@@ -13,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

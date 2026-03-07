@@ -2,15 +2,15 @@
 
 ## Introduction
 
-VeriCrop FinBridge is a production-ready AWS prototype that solves the Indian agricultural debt trap through a 60-second forensic "Truth Engine" and blockchain-backed bridge loans. The system reduces insurance claim-to-cash time from 6 months to 60 seconds by providing instant validation of crop damage claims through forensic analysis, enabling immediate issuance of blockchain-based Loss Certificates that serve as collateral for zero-interest bridge loans.
+VeriCrop FinBridge is a production-ready AWS prototype that solves the Indian agricultural debt trap through a 60-second forensic "Truth Engine" and cryptographically-secured bridge loans. The system reduces insurance claim-to-cash time from 6 months to 60 seconds by providing instant validation of crop damage claims through forensic analysis combined with Amazon Bedrock AI interpretation, enabling immediate issuance of tamper-evident Loss Certificates that serve as collateral for zero-interest bridge loans.
 
-The prototype is designed for deployment with available data today, using Transfer Learning on Amazon SageMaker with the PlantVillage dataset and Kaggle Indian Crop images. It employs a voice-first UX in regional languages (Hindi/Tamil/Telugu) to serve illiterate farmers, operates offline for 72 hours during network blackouts, and includes human-in-the-loop governance for responsible AI.
+The prototype is designed for deployment with available data today, using Transfer Learning on Amazon SageMaker with the PlantVillage dataset and Kaggle Indian Crop images. It employs Amazon Bedrock (Claude 3 Sonnet) for explainable AI policy interpretation, uses S3 presigned URLs to handle large video uploads (50-500MB), and features an enterprise-grade mobile-first UI with GPS auto-detection. The system includes voice interface design for regional languages (Hindi/Tamil/Telugu) ready for Singapore deployment, operates offline for 72 hours during network blackouts, and includes human-in-the-loop governance for responsible AI.
 
 ## Glossary
 
 - **Truth_Engine**: The core forensic AI system that validates crop damage claims through multi-layered analysis including shadow-sun correlation, weather data, and computer vision
 - **Solar_Azimuth_Validator**: Component that verifies shadow-sun correlation using the formula: sin α = sin Φ sin δ + cos Φ cos δ cos h to prevent fraud
-- **Loss_Certificate**: A blockchain-based immutable digital certificate proving validated crop damage for loan collateral
+- **Loss_Certificate**: A cryptographically-hashed tamper-evident digital certificate proving validated crop damage for loan collateral
 - **Micro_Farmer**: Small-scale farmers with limited financial resources and technology access, often illiterate
 - **Bridge_Loan**: Zero-interest micro-loan issued against Loss_Certificate collateral within 60 seconds
 - **Forensic_Validator**: AI system component that analyzes video evidence for authenticity using shadow analysis, GPS verification, and weather correlation
@@ -18,7 +18,10 @@ The prototype is designed for deployment with available data today, using Transf
 - **Offline_Cache**: AWS IoT Greengrass v2 local storage system for 72-hour disaster-zone operations
 - **HITL_Queue**: Human-in-the-loop audit queue using Amazon A2I for low-confidence claims and 5% random quality checks
 - **Step_Functions_Express**: AWS Step Functions Express workflow orchestrating 60-second end-to-end claim processing
-- **Immutable_Ledger**: Amazon QLDB or Managed Blockchain providing tamper-proof financial records
+- **Immutable_Ledger**: Amazon QLDB (planned for Phase 2) or DynamoDB with SHA-256 hashing (MVP) providing tamper-evident financial records
+- **Bedrock_Analyzer**: Amazon Bedrock with Claude 3 Sonnet for explainable AI policy interpretation and claim analysis
+- **Presigned_URL_Generator**: Lambda function that generates time-limited S3 upload URLs to bypass API Gateway 10MB payload limit
+- **Enterprise_UI**: Mobile-first responsive interface with glassmorphism effects, GPS auto-detection, and camera upload capabilities
 - **Transfer_Learning_Model**: SageMaker-trained crop damage classifier using PlantVillage and Kaggle Indian Crop datasets
 - **Sync_Manager**: AWS AppSync component that synchronizes offline data when connectivity returns
 - **Greengrass_Core**: AWS IoT Greengrass v2 edge runtime enabling local AI inference and offline operation
@@ -177,3 +180,46 @@ The prototype is designed for deployment with available data today, using Transf
 3. THE System SHALL use smart contracts to automate certificate lifecycle (issuance, collateral assignment, loan repayment, certificate closure)
 4. WHEN loan disbursement occurs, THE System SHALL update the Loss_Certificate with lender information on the blockchain
 5. THE System SHALL provide role-based access control so each organization can only access authorized certificate data
+
+### Requirement 13: Amazon Bedrock Explainable AI Policy Interpretation
+
+**User Story:** As a farmer, I want to understand why my claim was approved or rejected in simple language, so that I can trust the AI decision and know what to do next.
+
+#### Acceptance Criteria
+
+1. WHEN forensic validation completes, THE Bedrock_Analyzer SHALL use Claude 3 Sonnet to interpret results against insurance policy terms
+2. THE Bedrock_Analyzer SHALL generate natural language explanations in English and Hindi for all claim decisions
+3. WHEN a claim is rejected, THE Bedrock_Analyzer SHALL provide specific reasons with policy clause citations
+4. THE Bedrock_Analyzer SHALL detect fraud patterns and explain confidence scores in farmer-friendly language
+5. IF Amazon Bedrock is unavailable, THEN THE System SHALL fall back to rule-based analysis with basic explanations
+6. THE System SHALL log all Bedrock API calls and responses for audit trail and model improvement
+7. THE Bedrock_Analyzer SHALL complete analysis within 5 seconds to maintain 60-second processing SLA
+
+### Requirement 14: S3 Presigned URL Large Video Upload
+
+**User Story:** As a farmer, I want to upload large video evidence files (50-500MB) from my mobile phone, so that I can submit complete field damage documentation without technical limitations.
+
+#### Acceptance Criteria
+
+1. WHEN a farmer requests to upload evidence, THE Presigned_URL_Generator SHALL create a time-limited S3 upload URL valid for 5 minutes
+2. THE Presigned_URL_Generator SHALL validate content types to only allow video and image MIME types
+3. THE Presigned_URL_Generator SHALL sanitize filenames to prevent path traversal attacks
+4. THE System SHALL structure S3 keys as evidence/{claimId}/{timestamp}-{filename} for organized storage
+5. WHEN presigned URL is generated, THE System SHALL include metadata (claimId, uploadedAt, originalFilename) in S3 object tags
+6. THE System SHALL support direct upload to S3 bypassing API Gateway to handle files up to 500MB
+7. WHEN upload completes, THE System SHALL automatically trigger Rekognition video analysis via S3 event notification
+
+### Requirement 15: Enterprise Mobile-First UI with GPS Auto-Detection
+
+**User Story:** As a farmer with limited literacy, I want an intuitive mobile interface that automatically detects my location and guides me through claim submission, so that I can file claims without technical assistance.
+
+#### Acceptance Criteria
+
+1. THE Enterprise_UI SHALL implement mobile-first responsive design with breakpoints for phone, tablet, and desktop
+2. WHEN a farmer opens the claim submission page, THE Enterprise_UI SHALL automatically request and detect GPS coordinates
+3. THE Enterprise_UI SHALL provide visual feedback for GPS detection status (detecting, success, error)
+4. THE Enterprise_UI SHALL enable mobile camera access for direct photo and video capture from the field
+5. THE Enterprise_UI SHALL display upload progress indicators with percentage completion for large video files
+6. THE Enterprise_UI SHALL use glassmorphism effects and smooth animations for professional appearance
+7. THE Enterprise_UI SHALL eliminate all emoji icons in favor of professional SVG graphics
+8. THE Enterprise_UI SHALL provide a unified AppShell layout with consistent navigation across all pages
