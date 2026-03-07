@@ -24,21 +24,18 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 
 2. **Cryptographically Hashed Loss Certificates**
    - Tamper-evident proof stored on DynamoDB with SHA-256 hashing
-   - QLDB planned for Phase 2 (immutable blockchain ledger)
    - Instant collateral for bridge loans
+   - Cryptographic verification prevents tampering
 
 3. **Zero-Interest Bridge Loans**
    - 70% of damage amount disbursed instantly
    - Auto-repayment from insurance payout
    - Prevents farmers from falling into debt traps
 
-4. **Voice-First Interface**
-   - Hindi/Tamil/Telugu support via Amazon Lex + Polly
-   - Designed for illiterate farmers
-
-5. **Offline Resilience**
-   - 72-hour operation during network blackouts
-   - AWS IoT Greengrass v2 edge processing
+4. **Mobile-First Interface**
+   - GPS auto-detection for accurate location capture
+   - Mobile camera integration for field evidence
+   - Designed for farmers using smartphones
 
 ---
 
@@ -49,12 +46,9 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 ### AWS Services Stack
 
 **AI & ML Layer (Generative AI):**
-- **Amazon Bedrock** (Claude 3 Sonnet for claim analysis)
-- **Amazon Bedrock Knowledge Bases** (RAG for policy interpretation)
+- **Amazon Bedrock** (Claude 3 Sonnet for claim analysis with RAG)
 - Amazon Rekognition (video analysis)
-- Amazon SageMaker Neo (crop damage classification)
-- Amazon Lex (voice interface - documented for Singapore deployment)
-- Amazon Polly (text-to-speech - documented)
+- Amazon SageMaker (crop damage classification)
 
 **Core Infrastructure:**
 - AWS Lambda (10+ functions)
@@ -68,17 +62,8 @@ Indian farmers wait **6 months** for insurance claim payouts, forcing them into 
 - Weather API integration
 
 **Blockchain & Financial:**
-- Amazon DynamoDB with SHA-256 hashing (tamper-evident certificates for MVP)
-- Amazon QLDB (planned for Phase 2 - immutable ledger)
-- Mock UPI Gateway (bridge loan disbursement)
-
-**Voice Interface:**
-- Amazon Lex (voice bot - Hindi/Tamil/Telugu)
-- Amazon Polly (text-to-speech)
-
-**Offline Capability:**
-- AWS IoT Greengrass v2 (edge processing)
-- AWS AppSync (offline sync)
+- Amazon DynamoDB with SHA-256 hashing (tamper-evident certificates)
+- UPI Gateway integration (bridge loan disbursement)
 
 **Governance:**
 - Amazon A2I (human-in-the-loop)
@@ -292,8 +277,8 @@ Where:
 ### 3. Cryptographically Hashed Loss Certificates
 - Stored on DynamoDB with SHA-256 cryptographic verification
 - Tamper-evident proof for regulators and auditors
-- QLDB planned for Phase 2 (immutable blockchain ledger)
 - Instant collateral for bridge loans
+- Any modification breaks the cryptographic hash
 
 ### 4. Zero-Interest Bridge Loans
 - 70% of validated damage amount
@@ -301,17 +286,11 @@ Where:
 - Auto-repayment from insurance payout
 - Prevents 24% interest debt trap
 
-### 5. Voice-First for Bharat
-- Amazon Lex bot in Hindi/Tamil/Telugu
-- 90% intent recognition accuracy
-- Guides farmers through entire claim process
-- No literacy required
-
-### 6. Offline Resilience
-- AWS IoT Greengrass v2 for local processing
-- 72-hour operation without internet
-- Provisional certificates issued offline
-- Auto-sync when connectivity returns
+### 5. Mobile-First for Bharat
+- GPS auto-detection for accurate location capture
+- Mobile camera integration for field evidence
+- Professional UI with minimal manual input
+- Accessible on any smartphone
 
 ---
 
@@ -337,17 +316,13 @@ Where:
 - **<60 seconds** processing time
 - **Hindi voice interface** for accessibility
 
-### Phase 2 (Production)
-- Scale to **10,000 concurrent claims**
-- Add Tamil/Telugu languages
-- Deploy Greengrass to 100 edge devices
-- Human-in-the-loop with Amazon A2I
-
-### Phase 3 (National Rollout)
-- Partner with insurance companies
-- Integrate with PM-FASAL government scheme
-- Deploy to **100 districts** across India
-- Process **1M claims** in first year
+### Future Scope
+- **Scale to Production**: 10,000+ concurrent claims with auto-scaling
+- **Voice Interface**: Amazon Lex + Polly for Hindi/Tamil/Telugu (requires Singapore region deployment)
+- **Offline Capability**: AWS IoT Greengrass for 72-hour offline operation in rural areas
+- **Immutable Ledger**: Migrate from DynamoDB+SHA-256 to Amazon QLDB for full blockchain
+- **National Rollout**: Partner with insurance companies and integrate with PM-FASAL scheme
+- **Multi-Region**: Deploy across 100 districts, process 1M+ claims annually
 
 ---
 

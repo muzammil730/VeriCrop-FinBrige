@@ -104,8 +104,6 @@ This document provides a guided tour of the critical code components in VeriCrop
 
 **AWS Services Used**: Amazon DynamoDB, AWS Lambda
 
-**Phase 2 Roadmap**: Migrate to Amazon QLDB for full immutable ledger with cryptographic verification and audit trails.
-
 ---
 
 ## 6. Enterprise Mobile-First UI: Next.js + Tailwind CSS
@@ -186,17 +184,17 @@ This document provides a guided tour of the critical code components in VeriCrop
 
 **File Path**: `ml-training/compile_neo.py`
 
-**Engineering Decision**: We used Amazon SageMaker Neo to compile the crop damage classification model for edge deployment, reducing inference latency from 800ms to <100ms and enabling offline operation on AWS IoT Greengrass devices.
+**Engineering Decision**: We used Amazon SageMaker Neo to compile the crop damage classification model for optimized inference, reducing model size and improving latency for production deployment.
 
 **Technical Implementation**:
 - Compiles TensorFlow model to optimized format
-- Target platform: ARM64 (Raspberry Pi 4 for edge deployment)
 - Reduces model size by 60%
 - Maintains >90% classification accuracy
+- Enables faster inference for real-time claim processing
 
-**Why This Matters**: Edge deployment enables offline claim processing in rural areas with poor connectivity, critical for real-world adoption in India's agricultural regions.
+**Why This Matters**: Model optimization is critical for cost-effective scaling. Smaller models mean lower Lambda memory requirements and faster cold starts, directly reducing operational costs.
 
-**AWS Services Used**: Amazon SageMaker Neo, AWS IoT Greengrass (Phase 2)
+**AWS Services Used**: Amazon SageMaker Neo
 
 ---
 
@@ -282,12 +280,29 @@ This document provides a guided tour of the critical code components in VeriCrop
 
 ---
 
-## Future Roadmap (Post-Hackathon)
+## Future Scope
 
-1. **Phase 2 - Amazon QLDB**: Migrate from DynamoDB+SHA-256 to full immutable ledger
-2. **Phase 2 - Amazon Lex**: Deploy voice interface in Singapore region (not available in Mumbai)
-3. **Phase 2 - AWS IoT Greengrass**: Edge deployment for offline claim processing
-4. **Phase 3 - Multi-Region**: Expand to other Indian states and Southeast Asia
+### Voice Interface (Amazon Lex + Polly)
+- Hindi/Tamil/Telugu voice bot for illiterate farmers
+- Requires deployment in Singapore region (not available in Mumbai)
+- Complete architecture documented in `TASK_14_LEX_POLLY_CONSOLE_GUIDE.md`
+
+### Offline Capability (AWS IoT Greengrass)
+- 72-hour offline operation for rural areas with poor connectivity
+- Local AI inference with SageMaker Neo-compiled models
+- Automatic cloud sync when connectivity returns
+- Complete implementation guide in `TASK_15_GREENGRASS_CONSOLE_GUIDE.md`
+
+### Immutable Blockchain Ledger (Amazon QLDB)
+- Migrate from DynamoDB+SHA-256 to full immutable ledger
+- Cryptographic verification with audit trails
+- Multi-party consensus for insurance claims
+
+### National Scale Deployment
+- Multi-region deployment across India
+- Integration with PM-FASAL government scheme
+- Partnership with major insurance companies
+- Process 1M+ claims annually
 
 ---
 

@@ -19,7 +19,7 @@ This backend implements a fully serverless architecture using AWS Lambda functio
 - **Runtime**: Node.js 20.x (TypeScript)
 - **Framework**: AWS SDK v3
 - **Orchestration**: AWS Step Functions Express
-- **AI/ML**: Amazon Bedrock (Claude 3 Sonnet), Amazon Rekognition
+- **AI/ML**: Amazon Bedrock (Claude 3 Sonnet), Amazon Rekognition, Amazon SageMaker
 - **Storage**: Amazon S3, DynamoDB
 - **Monitoring**: CloudWatch, X-Ray
 
