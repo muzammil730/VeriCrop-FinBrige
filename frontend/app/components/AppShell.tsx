@@ -32,8 +32,8 @@ export default function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Network Status Indicator */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Network Status Indicator - Hidden on mobile to avoid overlap */}
+      <div className="hidden md:block fixed top-4 right-4 z-50">
         <div className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 ${
           isOnline 
             ? 'bg-emerald-50/90 border border-emerald-200' 
