@@ -1,0 +1,59 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+      ],
+      "Resource": [
+        "arn:aws:s3:::vericrop-evidence-889168907575",
+        "arn:aws:s3:::vericrop-evidence-889168907575/*"
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+      ],
+      "Resource": "arn:aws:kms:ap-south-1:889168907575:key/5af9d814-9a7a-44b2-a3f1-5eb31b31701d",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCrop-Claims",
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCrop-Weather",
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCrop-Claims/index/*",
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCropClaims",
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCropClaims/index/*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}

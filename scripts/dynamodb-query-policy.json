@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCropClaims",
+        "arn:aws:dynamodb:ap-south-1:889168907575:table/VeriCropClaims/index/*"
+      ]
+    }
+  ]
+}
