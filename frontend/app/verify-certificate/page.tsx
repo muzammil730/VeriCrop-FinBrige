@@ -11,37 +11,7 @@ export default function VerifyCertificate() {
   const verifyCertificate = async () => {
     setLoading(true)
     
-    // DEMO MODE: Simulate certificate verification for hackathon presentation
-    // TODO: Connect to real API endpoint after hackathon
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Check if certificate ID matches the demo pattern
-      if (certificateId.startsWith('CERT-2026-03-07-')) {
-        // Valid demo certificate
-        const demoResult = {
-          valid: true,
-          certificateId,
-          farmerId: 'F12345',
-          farmerName: 'Ramesh Kumar',
-          damageAmount: 50000,
-          validationScore: 95,
-          status: 'APPROVED',
-          issuedAt: new Date().toISOString(),
-          expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year from now
-          hash: 'a7f5c8d9e2b4f1a3c6d8e9f0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0'
-        }
-        setResult(demoResult)
-      } else {
-        // Invalid certificate
-        setResult({ 
-          valid: false,
-          error: 'Certificate not found or invalid'
-        })
-      }
-      
-      /* PRODUCTION CODE (uncomment when API is ready):
       const response = await fetch(
         'https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/certificates/verify',
         {
@@ -52,7 +22,6 @@ export default function VerifyCertificate() {
       )
       const data = await response.json()
       setResult(data)
-      */
     } catch (error) {
       console.error('Error:', error)
       setResult({ error: 'Failed to verify certificate. Please try again.' })

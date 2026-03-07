@@ -70,76 +70,7 @@ export default function ClaimSubmission() {
   const submitClaim = async () => {
     setLoading(true)
     
-    // DEMO MODE: Simulate claim submission with fraud detection for hackathon presentation
-    // TODO: Connect to real API endpoint after hackathon
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Generate demo claim ID and certificate ID
-      const timestamp = new Date().toISOString().split('T')[0]
-      const randomId = Math.floor(Math.random() * 10000).toString().padStart(5, '0')
-      const claimId = `CLAIM-${timestamp}-${randomId}`
-      
-      // FRAUD DETECTION LOGIC
-      const damagePercentage = parseFloat(formData.damagePercentage || '0')
-      const estimatedDamage = parseFloat(formData.estimatedDamage || '0')
-      
-      // Fraud indicators:
-      // 1. Damage percentage > 90% (suspiciously high)
-      // 2. Estimated damage > 100000 (suspiciously high amount)
-      // 3. Missing critical fields
-      
-      const isFraudulent = 
-        damagePercentage > 90 || 
-        estimatedDamage > 100000 ||
-        !formData.farmerName ||
-        !formData.phoneNumber
-      
-      if (isFraudulent) {
-        // REJECTED CLAIM
-        const rejectedResult = {
-          claimId,
-          status: 'REJECTED',
-          validationScore: damagePercentage > 90 ? 35 : 45,
-          farmerName: formData.farmerName,
-          damageAmount: estimatedDamage,
-          timestamp: new Date().toISOString(),
-          rejectionReason: damagePercentage > 90 
-            ? 'Suspicious damage percentage (>90%). AI fraud detection flagged this claim.'
-            : estimatedDamage > 100000
-            ? 'Suspiciously high damage amount. Requires manual review.'
-            : 'Missing critical information. Please complete all required fields.',
-          validations: {
-            solarAzimuth: damagePercentage > 90 ? 'FAIL' : 'PASS',
-            weatherCorrelation: 'PASS',
-            aiClassification: damagePercentage > 90 ? 'FRAUD_DETECTED' : 'SUSPICIOUS',
-            bedrockAnalysis: 'REJECT'
-          }
-        }
-        setResult(rejectedResult)
-      } else {
-        // APPROVED CLAIM
-        const certificateId = `CERT-${timestamp}-${randomId}`
-        const approvedResult = {
-          claimId,
-          certificateId,
-          status: 'APPROVED',
-          validationScore: 95,
-          farmerName: formData.farmerName,
-          damageAmount: estimatedDamage,
-          timestamp: new Date().toISOString(),
-          validations: {
-            solarAzimuth: 'PASS',
-            weatherCorrelation: 'PASS',
-            aiClassification: 'PASS',
-            bedrockAnalysis: 'APPROVE'
-          }
-        }
-        setResult(approvedResult)
-      }
-      
-      /* PRODUCTION CODE (uncomment when API is ready):
       const response = await fetch(
         'https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/claims',
         {
@@ -157,8 +88,8 @@ export default function ClaimSubmission() {
       )
       const data = await response.json()
       setResult(data)
-      */
     } catch (error) {
+      console.error('Error:', error)
       setResult({ error: 'Failed to submit claim. Please try again.' })
     }
     setLoading(false)

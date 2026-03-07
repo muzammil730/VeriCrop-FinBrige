@@ -11,39 +11,7 @@ export default function BridgeLoan() {
   const requestLoan = async () => {
     setLoading(true)
     
-    // DEMO MODE: Simulate bridge loan calculation for hackathon presentation
-    // TODO: Connect to real API endpoint after hackathon
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Check if certificate ID matches the demo pattern
-      if (certificateId.startsWith('CERT-2026-03-07-')) {
-        // Valid demo certificate - calculate 70% loan
-        const damageAmount = 50000 // From demo claim
-        const loanAmount = Math.floor(damageAmount * 0.70)
-        const loanId = `LOAN-${certificateId.replace('CERT-', '')}`
-        
-        const demoResult = {
-          loanId,
-          certificateId,
-          damageAmount,
-          loanAmount,
-          interestRate: 0,
-          status: 'APPROVED',
-          disbursementMethod: 'UPI',
-          upiId: 'ramesh@ybl',
-          repaymentSource: 'Insurance Payout'
-        }
-        setResult(demoResult)
-      } else {
-        // Invalid certificate
-        setResult({ 
-          error: 'Certificate not found or invalid. Please check the Certificate ID.'
-        })
-      }
-      
-      /* PRODUCTION CODE (uncomment when API is ready):
       const response = await fetch(
         'https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/loans',
         {
@@ -54,7 +22,6 @@ export default function BridgeLoan() {
       )
       const data = await response.json()
       setResult(data)
-      */
     } catch (error) {
       console.error('Error:', error)
       setResult({ error: 'Failed to process loan request. Please try again.' })
