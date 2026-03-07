@@ -39,7 +39,7 @@ export default function VerifyCertificate() {
               Verify Loss Certificate
             </h1>
             <p className="text-xl text-slate-300">
-              Blockchain-backed certificate verification with Amazon QLDB
+              Cryptographically hashed certificate verification with tamper-evident proof
             </p>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function VerifyCertificate() {
           {/* Info Cards */}
           <div className="mb-12 grid sm:grid-cols-3 gap-4 animate-slide-up">
             {[
-              { label: 'Blockchain Storage', value: 'QLDB', desc: 'Immutable ledger' },
+              { label: 'Blockchain Storage', value: 'DynamoDB', desc: 'SHA-256 hashing' },
               { label: 'Verification', value: 'Instant', desc: 'Real-time check' },
               { label: 'Security', value: '256-bit', desc: 'Cryptographic hash' },
             ].map((item, index) => (
@@ -188,8 +188,8 @@ export default function VerifyCertificate() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                       <div>
-                        <p className="font-semibold text-blue-900 mb-1">Stored on Amazon QLDB</p>
-                        <p className="text-sm text-blue-700">Quantum Ledger Database - Immutable and cryptographically verifiable</p>
+                        <p className="font-semibold text-blue-900 mb-1">Stored on DynamoDB with SHA-256</p>
+                        <p className="text-sm text-blue-700">Tamper-evident storage with cryptographic verification</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-blue-700">

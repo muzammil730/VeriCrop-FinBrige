@@ -398,15 +398,15 @@ export default function Home() {
             {[
               {
                 title: 'AI & ML Layer',
-                services: ['Amazon Bedrock', 'Amazon Rekognition', 'Amazon Lex + Polly', 'SageMaker Neo'],
+                services: ['Amazon Bedrock (Claude 3)', 'Amazon Rekognition', 'Amazon SageMaker'],
               },
               {
                 title: 'Core Infrastructure',
-                services: ['AWS Lambda (18 functions)', 'Step Functions Express', 'DynamoDB (On-Demand)', 'S3 with Object Lock'],
+                services: ['AWS Lambda (18 functions)', 'Step Functions Express', 'DynamoDB + SHA-256', 'S3 Presigned URLs'],
               },
               {
-                title: 'Blockchain & Edge',
-                services: ['Amazon QLDB', 'AWS IoT Greengrass v2', 'API Gateway', 'UPI Gateway Integration'],
+                title: 'Security & Monitoring',
+                services: ['API Gateway', 'Amazon Cognito', 'CloudWatch + X-Ray', 'AWS Amplify CI/CD'],
               },
             ].map((layer, index) => (
               <div
