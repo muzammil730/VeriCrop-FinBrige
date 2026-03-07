@@ -3,6 +3,15 @@
 > **60-Second Forensic AI for Agricultural Insurance Claims**  
 > Reducing claim-to-cash time from 6 months to 60 seconds using physics-based fraud detection and blockchain bridge loans.
 
+## 🌐 Live Demo
+
+**Frontend:** https://main.d564kvq3much7.amplifyapp.com  
+**API Gateway:** https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/
+
+### Quick Test (30 seconds)
+1. Go to [Verify Certificate](https://main.d564kvq3much7.amplifyapp.com/verify-certificate)
+2. Enter: `CERT-2026-03-07-10000`
+3. See instant verification with SHA-256 hash
 
 ---
 

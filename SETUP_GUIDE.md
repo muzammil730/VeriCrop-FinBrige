@@ -1,53 +1,108 @@
-# VeriCrop FinBridge - Development Setup Guide
+# VeriCrop FinBridge - Setup Guide
 
-## Prerequisites Installation (30 minutes)
+## 🚀 Quick Start (5 minutes)
 
-You need to install these tools before we can start development.
+### Prerequisites
+- Node.js 18+ installed
+- AWS CLI configured
+- AWS credentials with DynamoDB access
 
----
+### Setup Steps
 
-## Step 1: Install Node.js (Required for AWS CDK)
-
-**What is Node.js?**
-- JavaScript runtime that lets you run JavaScript code outside a browser
-- Required for AWS CDK (Infrastructure as Code tool)
-
-**Installation:**
-1. Go to: https://nodejs.org/
-2. Download "LTS" version (Long Term Support) - currently v20.x
-3. Run installer
-4. Keep all default options
-5. Click "Install"
-6. Restart your terminal
-
-**Verify Installation:**
+1. **Clone Repository**
 ```bash
-node --version
-# Should show: v20.x.x
-
-npm --version
-# Should show: 10.x.x
+git clone https://github.com/muzammil730/VeriCrop-FinBrige.git
+cd VeriCrop-FinBrige
 ```
 
-**What you learned:** Node.js is the foundation for modern JavaScript development. NPM (Node Package Manager) comes with it and manages code libraries.
+2. **Create DynamoDB Table & Seed Data**
+```bash
+cd scripts
+npm install
+node create-dynamodb-table.js
+node seed-demo-data-to-dynamodb.js
+```
+
+3. **Test the Live App**
+- Open: https://main.d564kvq3much7.amplifyapp.com
+- Try certificate verification with: `CERT-2026-03-07-10000`
+- Try bridge loan with same certificate ID
+
+## 📋 Demo Certificate IDs
+
+```
+CERT-2026-03-07-10000  →  ₹59,060  →  ₹41,342 loan
+CERT-2026-03-06-10001  →  ₹87,393  →  ₹61,175 loan
+CERT-2026-03-05-10002  →  ₹91,792  →  ₹64,254 loan
+```
+
+## 🏗️ Project Structure
+
+```
+VeriCrop-FinBrige/
+├── frontend/          # Next.js frontend (deployed on Amplify)
+├── backend/           # Lambda functions (TypeScript/Python)
+├── infrastructure/    # AWS CDK infrastructure code
+├── ml-training/       # SageMaker model training
+├── scripts/           # Setup and demo data scripts
+└── docs/              # Additional documentation
+```
+
+## 🔧 Development Setup
+
+### Frontend Development
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend Development
+```bash
+cd backend
+npm install
+npm run build
+```
+
+### Infrastructure Deployment
+```bash
+cd infrastructure
+npm install
+cdk deploy --all
+```
+
+## 📖 Documentation
+
+- **[README.md](README.md)** - Project overview
+- **[CODE_TOUR.md](CODE_TOUR.md)** - Code walkthrough
+- **[TECHNICAL_ROADMAP.md](TECHNICAL_ROADMAP.md)** - Implementation plan
+- **[Requirements](.kiro/specs/vericrop-finbridge/requirements.md)** - Detailed requirements
+- **[Design](.kiro/specs/vericrop-finbridge/design.md)** - System architecture
+
+## 🆘 Troubleshooting
+
+### DynamoDB Table Not Found
+```bash
+cd scripts
+node create-dynamodb-table.js
+```
+
+### AWS Credentials Not Configured
+```bash
+aws configure
+# Enter your AWS Access Key ID and Secret Access Key
+# Region: ap-south-1
+```
+
+### Demo Data Not Seeded
+```bash
+cd scripts
+node seed-demo-data-to-dynamodb.js
+```
 
 ---
 
-## Step 2: Install Python (Required for Lambda Functions)
-
-**What is Python?**
-- Programming language we'll use for Lambda functions
-- Easy to read and write, perfect for serverless functions
-
-**Installation:**
-1. Go to: https://www.python.org/downloads/
-2. Download Python 3.11 or 3.12
-3. **IMPORTANT:** Check "Add Python to PATH" during installation
-4. Run installer
-5. Click "Install Now"
-
-**Verify Installation:**
-```bash
+**Live Demo:** https://main.d564kvq3much7.amplifyapp.com
 python --version
 # Should show: Python 3.11.x or 3.12.x
 
