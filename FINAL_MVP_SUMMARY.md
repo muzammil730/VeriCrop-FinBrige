@@ -117,10 +117,11 @@
 - ✅ **X-Ray Tracing** - Distributed tracing enabled
 
 ### Blockchain & Ledger (MVP Complete)
-- ✅ **QLDB Configuration** - Simulated for MVP (DynamoDB alternative)
-- ✅ **SHA-256 Hashing** - Cryptographic verification
-- ✅ **Immutable Certificates** - Loss Certificate issuance
+- ✅ **DynamoDB with SHA-256 Hashing** - Tamper-evident certificates for MVP
+- ✅ **Cryptographic Verification** - SHA-256 hashing for integrity
+- ✅ **Tamper-Evident Certificates** - Loss Certificate issuance
 - ✅ **Audit Trail** - Complete transaction history
+- ⏭️ **QLDB Planned for Phase 2** - Immutable blockchain ledger
 
 ### Error Handling & Resilience (100% Complete)
 - ✅ **Circuit Breaker** - External API protection
@@ -150,10 +151,10 @@
 - SageMaker crop damage classification
 - Weather correlation anomaly detection
 
-### Blockchain Certificates 🔗
-- Immutable Loss Certificates
-- SHA-256 cryptographic hashing
-- DynamoDB with audit trail
+### Cryptographically Hashed Certificates 🔗
+- Tamper-evident Loss Certificates (DynamoDB + SHA-256)
+- Cryptographic hashing for integrity verification
+- DynamoDB with audit trail (QLDB planned for Phase 2)
 - Instant collateral for loans
 
 ### Zero-Interest Bridge Loans 💰
@@ -511,7 +512,7 @@ All icons use inline SVG with Heroicons-style paths:
 ### Innovation
 1. **World's First Physics-Based Fraud Detection** - Solar azimuth + shadow geometry
 2. **60-Second End-to-End Processing** - Step Functions Express orchestration
-3. **Zero-Interest Bridge Loans** - Blockchain certificates as collateral
+3. **Zero-Interest Bridge Loans** - Cryptographically hashed certificates as collateral
 4. **Enterprise-Grade UI** - Matches top-tier SaaS platforms like Cropin, NO emojis, glassmorphism effects
 5. **Farmer-Friendly UX** - GPS auto-detection, mobile camera upload, minimal manual input
 6. **Offline Resilience** - 72-hour operation without connectivity (documented)
@@ -566,7 +567,7 @@ All icons use inline SVG with Heroicons-style paths:
 3. **Show Mobile Camera Upload** - Field evidence capture via mobile phone
 4. **Submit Test Claim** - Via API Gateway with real-time validation
 5. **Show Solar Azimuth** - Physics-based fraud detection with live calculation
-6. **Show Blockchain Certificate** - Immutable proof with cryptographic hash
+6. **Show Cryptographically Hashed Certificate** - Tamper-evident proof with SHA-256 hash
 7. **Show Bridge Loan** - 0% interest calculation with timeline
 8. **Show Architecture** - AWS services diagram with 18 Lambda functions
 9. **Show Monitoring** - CloudWatch dashboard with 23 alarms
@@ -586,7 +587,7 @@ All icons use inline SVG with Heroicons-style paths:
 3. **How do you handle offline?** - IoT Greengrass with 72-hour cache (documented, ready for deployment)
 4. **How do farmers use it?** - GPS auto-detection, mobile camera upload, minimal manual input
 5. **What's the cost?** - $0.50 per claim, scales to millions
-6. **Is it secure?** - KMS encryption, Cognito auth, blockchain certificates, SHA-256 hashing
+6. **Is it secure?** - KMS encryption, Cognito auth, cryptographically hashed certificates with SHA-256, tamper-evident audit trail
 7. **Can it scale?** - Yes, serverless auto-scaling to 10,000+ concurrent claims
 8. **Why no emojis in UI?** - Enterprise-grade design matching top SaaS platforms, professional SVG icons only
 9. **How does GPS work?** - Browser Geolocation API with 10-second timeout, fallback to Mumbai coordinates
@@ -635,7 +636,7 @@ All icons use inline SVG with Heroicons-style paths:
 - [x] Claim submission and validation
 - [x] Forensic fraud detection
 - [x] AI-powered analysis
-- [x] Blockchain certificates
+- [x] Cryptographically hashed certificates
 - [x] Bridge loan calculation
 - [x] Payment processing
 - [x] HITL workflow
