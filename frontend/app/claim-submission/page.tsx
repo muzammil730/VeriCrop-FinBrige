@@ -69,7 +69,39 @@ export default function ClaimSubmission() {
 
   const submitClaim = async () => {
     setLoading(true)
+    
+    // DEMO MODE: Simulate successful claim submission for hackathon presentation
+    // TODO: Connect to real API endpoint after hackathon
     try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // Generate demo claim ID and certificate ID
+      const timestamp = new Date().toISOString().split('T')[0]
+      const randomId = Math.floor(Math.random() * 10000).toString().padStart(5, '0')
+      const claimId = `CLAIM-${timestamp}-${randomId}`
+      const certificateId = `CERT-${timestamp}-${randomId}`
+      
+      // Simulate successful response
+      const demoResult = {
+        claimId,
+        certificateId,
+        status: 'APPROVED',
+        validationScore: 95,
+        farmerName: formData.farmerName,
+        damageAmount: parseFloat(formData.estimatedDamage),
+        timestamp: new Date().toISOString(),
+        validations: {
+          solarAzimuth: 'PASS',
+          weatherCorrelation: 'PASS',
+          aiClassification: 'PASS',
+          bedrockAnalysis: 'APPROVE'
+        }
+      }
+      
+      setResult(demoResult)
+      
+      /* PRODUCTION CODE (uncomment when API is ready):
       const response = await fetch(
         'https://eig9hhfbk0.execute-api.ap-south-1.amazonaws.com/prod/claims',
         {
@@ -87,6 +119,7 @@ export default function ClaimSubmission() {
       )
       const data = await response.json()
       setResult(data)
+      */
     } catch (error) {
       setResult({ error: 'Failed to submit claim. Please try again.' })
     }
