@@ -150,7 +150,7 @@ export default function ClaimSubmission() {
                   type="text"
                   value={formData.farmerId}
                   onChange={(e) => setFormData({ ...formData, farmerId: e.target.value })}
-                  placeholder="F12345 (optional)"
+                  placeholder=""
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
@@ -162,7 +162,7 @@ export default function ClaimSubmission() {
                   type="text"
                   value={formData.farmerName}
                   onChange={(e) => setFormData({ ...formData, farmerName: e.target.value })}
-                  placeholder="Ramesh Kumar"
+                  placeholder=""
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
@@ -178,7 +178,7 @@ export default function ClaimSubmission() {
                   type="tel"
                   value={formData.phoneNumber}
                   onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                  placeholder="9999999999"
+                  placeholder=""
                   maxLength={10}
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
@@ -215,8 +215,8 @@ export default function ClaimSubmission() {
                   value={formData.latitude}
                   onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
                   readOnly={locationStatus === 'detecting'}
+                  placeholder=""
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                  placeholder="19.0760"
                 />
               </div>
               <div>
@@ -229,8 +229,8 @@ export default function ClaimSubmission() {
                   value={formData.longitude}
                   onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
                   readOnly={locationStatus === 'detecting'}
+                  placeholder=""
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
-                  placeholder="72.8777"
                 />
               </div>
             </div>
@@ -299,7 +299,7 @@ export default function ClaimSubmission() {
                   max="100"
                   value={formData.damagePercentage}
                   onChange={(e) => setFormData({ ...formData, damagePercentage: e.target.value })}
-                  placeholder="65"
+                  placeholder=""
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
@@ -314,7 +314,7 @@ export default function ClaimSubmission() {
                 type="number"
                 value={formData.estimatedDamage}
                 onChange={(e) => setFormData({ ...formData, estimatedDamage: e.target.value })}
-                placeholder="50000"
+                placeholder=""
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
               />
             </div>
@@ -411,7 +411,7 @@ export default function ClaimSubmission() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span>Processing via AWS Step Functions...</span>
+                  <span>Processing (Demo: 2-second simulation)...</span>
                 </>
               ) : (
                 <>
