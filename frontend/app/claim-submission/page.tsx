@@ -7,9 +7,12 @@ export default function ClaimSubmission() {
   const [formData, setFormData] = useState({
     farmerId: '',
     farmerName: '',
+    phoneNumber: '',
+    cropType: 'wheat',
     latitude: '',
     longitude: '',
     damageType: 'drought',
+    damagePercentage: '',
     estimatedDamage: '',
     description: '',
   })
@@ -76,6 +79,7 @@ export default function ClaimSubmission() {
             ...formData,
             latitude: parseFloat(formData.latitude),
             longitude: parseFloat(formData.longitude),
+            damagePercentage: formData.damagePercentage ? parseFloat(formData.damagePercentage) : undefined,
             estimatedDamage: parseFloat(formData.estimatedDamage),
             timestamp: new Date().toISOString(),
           }),
@@ -121,9 +125,40 @@ export default function ClaimSubmission() {
                   type="text"
                   value={formData.farmerName}
                   onChange={(e) => setFormData({ ...formData, farmerName: e.target.value })}
-                  placeholder="Enter name"
+                  placeholder="Ramesh Kumar"
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
+              </div>
+            </div>
+
+            {/* Contact & Crop Info */}
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  placeholder="9999999999"
+                  maxLength={10}
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Crop Type</label>
+                <select
+                  value={formData.cropType}
+                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                >
+                  <option value="wheat">Wheat</option>
+                  <option value="rice">Rice</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="sugarcane">Sugarcane</option>
+                  <option value="maize">Maize</option>
+                  <option value="pulses">Pulses</option>
+                  <option value="vegetables">Vegetables</option>
+                </select>
               </div>
             </div>
 
@@ -212,15 +247,29 @@ export default function ClaimSubmission() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Estimated Damage (₹)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Damage Percentage (%)</label>
                 <input
                   type="number"
-                  value={formData.estimatedDamage}
-                  onChange={(e) => setFormData({ ...formData, estimatedDamage: e.target.value })}
-                  placeholder="50000"
+                  min="1"
+                  max="100"
+                  value={formData.damagePercentage}
+                  onChange={(e) => setFormData({ ...formData, damagePercentage: e.target.value })}
+                  placeholder="65"
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
+            </div>
+
+            {/* Financial Info */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Estimated Loss Amount (₹)</label>
+              <input
+                type="number"
+                value={formData.estimatedDamage}
+                onChange={(e) => setFormData({ ...formData, estimatedDamage: e.target.value })}
+                placeholder="50000"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              />
             </div>
 
             {/* Description */}
@@ -306,7 +355,7 @@ export default function ClaimSubmission() {
             {/* Submit Button */}
             <button
               onClick={submitClaim}
-              disabled={loading || !formData.farmerId || !formData.estimatedDamage || !videoFile}
+              disabled={loading || !formData.farmerId || !formData.farmerName || !formData.phoneNumber || !formData.estimatedDamage || !videoFile}
               className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
