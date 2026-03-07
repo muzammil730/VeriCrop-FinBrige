@@ -104,12 +104,13 @@ azimuth calculations."
 
 | Field | Value | Notes |
 |-------|-------|-------|
-| **Farmer Name** | `Ramesh Kumar` | Exact match from DynamoDB |
-| **Phone Number** | `9999999999` | 10 digits, no +91 prefix |
-| **Crop Type** | `Wheat` | Select from dropdown |
-| **Damage Type** | `Flood` | Select from dropdown |
-| **Damage Percentage** | `65` | Number between 1-100 |
-| **Estimated Loss** | `50000` | In rupees (₹50,000) |
+| **Farmer ID** | Leave empty | Optional field - skip it |
+| **Farmer Name** | `Ramesh Kumar` | Required field |
+| **Phone Number** | `9999999999` | Required - 10 digits, no +91 prefix |
+| **Crop Type** | `Wheat` | Required - Select from dropdown |
+| **Damage Type** | `Flood` | Required - Select from dropdown |
+| **Damage Percentage** | `65` | Required - Number between 1-100 |
+| **Estimated Loss** | `50000` | Required - In rupees (₹50,000) |
 
 **GPS Coordinates** (Auto-filled, but verify):
 - **Latitude**: `19.0760` (Mumbai)
@@ -524,6 +525,7 @@ If something goes wrong during live demo:
 **Follow these EXACT inputs:**
 
 ```
+Farmer ID: (leave empty - optional)
 Farmer Name: Ramesh Kumar
 Phone: 9999999999
 Crop Type: Wheat

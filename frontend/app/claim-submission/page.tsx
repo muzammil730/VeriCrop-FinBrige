@@ -110,17 +110,21 @@ export default function ClaimSubmission() {
             {/* Farmer Info */}
             <div className="grid sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Farmer ID</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Farmer ID <span className="text-slate-500 text-xs">(Optional)</span>
+                </label>
                 <input
                   type="text"
                   value={formData.farmerId}
                   onChange={(e) => setFormData({ ...formData, farmerId: e.target.value })}
-                  placeholder="F12345"
+                  placeholder="F12345 (optional)"
                   className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Farmer Name</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Farmer Name <span className="text-red-600">*</span>
+                </label>
                 <input
                   type="text"
                   value={formData.farmerName}
@@ -134,7 +138,9 @@ export default function ClaimSubmission() {
             {/* Contact & Crop Info */}
             <div className="grid sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Phone Number <span className="text-red-600">*</span>
+                </label>
                 <input
                   type="tel"
                   value={formData.phoneNumber}
@@ -145,7 +151,9 @@ export default function ClaimSubmission() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Crop Type</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Crop Type <span className="text-red-600">*</span>
+                </label>
                 <select
                   value={formData.cropType}
                   onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
@@ -233,7 +241,9 @@ export default function ClaimSubmission() {
             {/* Damage Info */}
             <div className="grid sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Damage Type</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Damage Type <span className="text-red-600">*</span>
+                </label>
                 <select
                   value={formData.damageType}
                   onChange={(e) => setFormData({ ...formData, damageType: e.target.value })}
@@ -247,7 +257,9 @@ export default function ClaimSubmission() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Damage Percentage (%)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Damage Percentage (%) <span className="text-red-600">*</span>
+                </label>
                 <input
                   type="number"
                   min="1"
@@ -262,7 +274,9 @@ export default function ClaimSubmission() {
 
             {/* Financial Info */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Estimated Loss Amount (₹)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Estimated Loss Amount (₹) <span className="text-red-600">*</span>
+              </label>
               <input
                 type="number"
                 value={formData.estimatedDamage}
@@ -355,7 +369,7 @@ export default function ClaimSubmission() {
             {/* Submit Button */}
             <button
               onClick={submitClaim}
-              disabled={loading || !formData.farmerId || !formData.farmerName || !formData.phoneNumber || !formData.estimatedDamage || !videoFile}
+              disabled={loading || !formData.farmerName || !formData.phoneNumber || !formData.estimatedDamage || !videoFile}
               className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
