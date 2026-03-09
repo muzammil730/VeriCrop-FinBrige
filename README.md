@@ -3,6 +3,12 @@
 > **60-Second Forensic AI for Agricultural Insurance Claims**  
 > Reducing claim-to-cash time from 6 months to 60 seconds using physics-based fraud detection and blockchain bridge loans.
 
+## 🎥 Full Project Demo 
+
+Watch the complete walkthrough of VeriCrop FinBridge:
+
+[https://drive.google.com/YOUR_VIDEO_LINK](https://drive.google.com/file/d/1-yNoPt6vyUT6mrC2254MM3DW7YWMWbUe/view)
+
 ## 🌐 Live Demo
 
 **Frontend:** https://main.d564kvq3much7.amplifyapp.com  
@@ -268,6 +274,7 @@ Where:
 **Built with ❤️ for Indian Farmers**
 
 *Reducing claim-to-cash time from 6 months to 60 seconds*
+
 
 
 
